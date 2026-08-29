@@ -4,7 +4,7 @@
 
 The **Issue Tracker** interface stays in place, but it has one shipped implementation: markdown files under `.scratch/`. The generated contract also defines triage and review operations plus the repo-relative ticket and spec commit references used for implementation scope, committed Review results, and accepted-ticket persistence checks. Downstream skills still read `docs/agents/issue-tracker.md`, so no provider choice is added to each caller.
 
-It is a prompt-driven skill, not a deterministic script. It reads your existing `CLAUDE.md` or `AGENTS.md`, your existing domain docs, and any prior local tracker files, then waits for you to confirm before writing anything.
+It is a prompt-driven skill, not a deterministic script. It reads your existing `AGENTS.md` or `CLAUDE.md`, your existing domain docs, and any prior local tracker files, then waits for you to confirm before writing anything.
 
 ## When to reach for it
 
@@ -21,7 +21,7 @@ It writes into the repo you run it in:
 | `issue-tracker.md` | `docs/agents/` |
 | `domain.md` | `docs/agents/` |
 | `triage-labels.md` | `docs/agents/`, only when the `triage` skill is installed |
-| An `## Agent skills` block | whichever of `CLAUDE.md` / `AGENTS.md` already exists |
+| An `## Agent skills` block | `AGENTS.md` when present, otherwise the existing `CLAUDE.md` |
 
 All of it is committed markdown. There is no user-level or global mode: the config lives in the repo, so every repo gets its own copy.
 
@@ -47,9 +47,9 @@ No. This distribution keeps the Issue Tracker interface but ships only the local
 
 Re-run it when you want to refresh the generated files from the current templates or restart the setup. There is no tracker-switching mode because local markdown is the only implementation.
 
-**It wrote to `CLAUDE.md`, but I'm on Codex.**
+**Which instruction file does it update?**
 
-Known gap, still open. The file-selection rule is "edit `CLAUDE.md` if it exists, else `AGENTS.md`": it checks which file exists, not which [harness](https://www.aihero.dev/ai-coding-dictionary/harness) is running. A repo with a `CLAUDE.md` left over from Claude Code will get its `## Agent skills` block somewhere Codex never reads. Two workarounds are in circulation: move the block to `AGENTS.md` by hand, or keep `AGENTS.md` canonical and make `CLAUDE.md` a one-line pointer at it. If neither file exists, the skill asks you which to create rather than picking, which has confused people who expected it to just decide.
+It prefers `AGENTS.md`, the cross-agent instruction file Codex reads. If only `CLAUDE.md` exists, it edits that file instead so Claude-only repos keep working. If both harnesses share the repo, keep `AGENTS.md` canonical and make `CLAUDE.md` a symlink or pointer to it. If neither file exists, the skill asks which one to create rather than guessing your harness.
 
 **It didn't create my triage states.**
 
@@ -57,7 +57,7 @@ There is nothing external to create. `docs/agents/triage-labels.md` maps the fiv
 
 **Can I configure the other skills' behaviour here ([grilling](https://www.aihero.dev/ai-coding-dictionary/grilling) cadence, question format, tone)?**
 
-No. It configures three things: tracker, triage states, doc layout. There have been direct requests to make it the home for per-user preferences, and the standing answer is that skills stay opinionated: *"Config is death."* Preferences belong in your `CLAUDE.md` as plain instructions, which every skill already reads.
+No. It configures three things: tracker, triage states, doc layout. There have been direct requests to make it the home for per-user preferences, and the standing answer is that skills stay opinionated: *"Config is death."* Preferences belong in your `AGENTS.md`, or in `CLAUDE.md` for a Claude-only repo, as plain instructions that every skill already reads.
 
 **Can I keep the config in `~/.claude` instead of committing it to every repo?**
 

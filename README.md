@@ -24,12 +24,25 @@ If you want to keep up with changes to these skills, and any new ones I create, 
 
 ## Installation (30-second setup)
 
-Two ways in, two philosophies. **The [Claude Code plugin](https://code.claude.com/docs/en/plugins)** installs the whole set as a managed, read-only bundle that updates when I ship, so you subscribe rather than fork. **[skills.sh](https://skills.sh/mattpocock/skills)** copies editable skill files into your project, so you can hack on them and make them your own. Pick one: installing both leaves you with every skill twice.
+For Codex and other Agent Skills-compatible harnesses, **[skills.sh](https://skills.sh/mattpocock/skills)** copies editable skill files into your project so you can hack on them and make them your own. Claude Code is also supported through a compatible [native plugin](https://code.claude.com/docs/en/plugins), which installs the whole set as a managed, read-only bundle that updates when I ship. On Claude Code, pick one route: installing both leaves you with every skill twice.
 
 ### 1. Get the skills
 
 <details>
-<summary><strong>Claude Code</strong></summary>
+<summary><strong>Codex, and other agents</strong></summary>
+
+```bash
+npx skills@latest add mattpocock/skills
+```
+
+Pick the skills you want, and which coding agents to install them on. When selecting skills individually, include `setup-matt-pocock-skills`. `ticket-implement` also needs `tdd`, `ticket-review`, and `code-review`; `ticket-review` and `spec-review` need `code-review`.
+
+Codex support is available through skills.sh today. A native Codex plugin remains deferred because the current manifest cannot select both promoted buckets without also shipping non-promoted skills (see [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md)).
+
+</details>
+
+<details>
+<summary><strong>Claude Code compatibility</strong></summary>
 
 ```bash
 claude plugins install mattpocock-skills
@@ -42,19 +55,6 @@ Or, from inside a session:
 ```
 
 It's in Claude Code's official marketplace, so there's nothing to add first, and updates arrive automatically.
-
-</details>
-
-<details>
-<summary><strong>Codex, and other agents</strong></summary>
-
-```bash
-npx skills@latest add mattpocock/skills
-```
-
-Pick the skills you want, and which coding agents to install them on. When selecting skills individually, include `setup-matt-pocock-skills`. `ticket-implement` also needs `tdd`, `ticket-review`, and `code-review`; `ticket-review` and `spec-review` need `code-review`.
-
-A native Codex plugin is on the roadmap (see [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md)).
 
 </details>
 

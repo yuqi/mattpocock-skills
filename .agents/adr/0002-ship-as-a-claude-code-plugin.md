@@ -39,3 +39,14 @@ Verified 2026-08-05, on Claude Code 2.1.222, against the live listing:
 - `claude plugin details mattpocock-skills` then reports version 1.2.0 and loads the promoted skills.
 - The listing's `source` is `{"source": "url", "url": "https://github.com/mattpocock/skills.git", "sha": …}`: the **sha is pinned**, so a release reaches installed users when that pin moves, not the moment we tag. At the time of writing the pin sits two commits behind `main`, which is why it lists 22 skills rather than the 24 in `plugin.json`.
 - The in-session `/plugin install mattpocock-skills` was **not** exercised: `/plugin` is unavailable in headless (`claude -p`) sessions. It runs the same resolver as the CLI, and the documented example form is `/plugin install <name>@claude-plugins-official`.
+
+## Update, 2026-08-30: Codex-primary consumption
+
+Codex is now the primary documented harness for this repository. This changes the consumption and maintenance order, not the plugin-format constraint or the earlier packaging decision:
+
+- Codex and other Agent Skills-compatible harnesses install through skills.sh and use each skill's `agents/openai.yaml` as the authoritative invocation metadata.
+- `AGENTS.md` is the canonical repository instruction file. `CLAUDE.md` points to it so Claude Code reads the same instructions without a second copy.
+- The native Claude Code plugin and its frontmatter invocation fields remain as a compatibility distribution. They must stay synchronized with the Codex metadata.
+- A native Codex plugin remains deferred for the same single-path selection constraint described above. Codex support does not depend on that plugin because skills.sh already installs the promoted skills.
+
+The canonical install wording and route order live in [.agents/install-block.md](../install-block.md).
