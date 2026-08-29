@@ -1,6 +1,6 @@
 ---
 name: setup-matt-pocock-skills
-description: "Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills."
+description: "Configure this repo for the engineering skills: set up its issue tracker, triage state vocabulary, and domain doc layout. Run once before first use of the other engineering skills."
 disable-model-invocation: true
 ---
 
@@ -9,7 +9,7 @@ disable-model-invocation: true
 Scaffold the per-repo configuration that the engineering skills assume:
 
 - **Issue tracker**: local markdown files under `.scratch/`
-- **Triage labels**: the strings used for the five canonical triage roles
+- **Triage labels**: the `Status:` values used for the five canonical triage state roles
 - **Domain docs**: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
@@ -38,13 +38,13 @@ Lead each configurable section with the recommended answer so the user can accep
 
 The issue tracker has one implementation: local markdown files under `.scratch/<feature>/`. Tell the user this is what setup will configure, then use [issue-tracker-local.md](./issue-tracker-local.md) for `docs/agents/issue-tracker.md`.
 
-**Section B: Triage label vocabulary.** Skip this section entirely if the `triage` skill isn't installed (exploration told you), since an uninstalled skill needs no labels.
+**Section B: Triage state vocabulary.** Skip this section entirely if the `triage` skill isn't installed (exploration told you), since an uninstalled skill needs no state mapping.
 
 If it is installed, ask exactly one question:
 
-> Do you want to keep the default triage labels? (recommended: **yes**)
+> Do you want to keep the default triage status values? (recommended: **yes**)
 
-The defaults are the five canonical roles, each label string equal to its name: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. On **yes**, write them as-is. Only if the user says no, usually because their tracker already uses other names (e.g. `bug:triage` for `needs-triage`), collect the overrides so `triage` applies existing labels instead of creating duplicates.
+The defaults are the five canonical state roles, each local `Status:` value equal to its name: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. On **yes**, write them as-is. Only if the user says no, usually because their local tickets already use other values (e.g. `bug:triage` for `needs-triage`), collect the overrides so `triage` uses the established vocabulary instead of inventing another value.
 
 **Section C: Domain docs.** Default to **single-context** (one `CONTEXT.md` + `docs/adr/` at the repo root). This fits almost every repo; write it without asking.
 
@@ -82,7 +82,7 @@ The block:
 
 ### Triage labels
 
-[one-line summary of the label vocabulary]. See `docs/agents/triage-labels.md`.
+[one-line summary of the triage state vocabulary]. See `docs/agents/triage-labels.md`.
 
 ### Domain docs
 
@@ -94,9 +94,9 @@ Include the `### Triage labels` sub-block, and write `docs/agents/triage-labels.
 Then write the docs files using the seed templates in this skill folder as a starting point:
 
 - [issue-tracker-local.md](./issue-tracker-local.md): local-markdown issue tracker
-- [triage-labels.md](./triage-labels.md): label mapping (only if `triage` is installed)
+- [triage-labels.md](./triage-labels.md): state-role value mapping (only if `triage` is installed)
 - [domain.md](./domain.md): domain doc consumer rules + layout
 
 ### 5. Done
 
-Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-running this skill is only necessary if they want to restart from scratch.
+Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-run this skill when they need to refresh generated contracts from the current templates or restart setup.

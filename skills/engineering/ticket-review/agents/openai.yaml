@@ -1,0 +1,3 @@
+interface:
+  display_name: "Ticket Review"
+  short_description: "Review one ticket against its acceptance criteria"

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ticket Implement"
+  short_description: "Implement and accept local ticket queues"
+policy:
+  allow_implicit_invocation: false

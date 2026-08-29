@@ -6,17 +6,19 @@ disable-model-invocation: true
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user; just synthesize what you already know.
 
-The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/setup-matt-pocock-skills`.
+The Issue Tracker configuration and triage state mapping should have been provided to you. If not, tell the user to run `/setup-matt-pocock-skills`.
 
 ## Process
 
-1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in the area you're touching.
+1. Resolve the source, then explore the repo to understand the current state of the codebase if you haven't already. If the user supplied a normalized repo-relative `.scratch/` reference, fetch and read the complete local Issue Tracker file before synthesizing.
+
+When that source is a wayfinder `map.md`, read the complete map and collect every Issue Tracker reference in its `## Decisions so far` section. Fetch each referenced decision ticket and require `Status: resolved` plus an `## Answer` section. Stop on a missing, ambiguous, unresolved, or answer-free reference instead of synthesizing an incomplete handoff. Treat the map and those Answers as the authoritative planning source alongside the current conversation; do not copy them back into or otherwise modify the map.
 
 2. Sketch out the seams at which you're going to test the feature. Existing seams should be preferred to new ones. Use the highest seam possible. If new seams are needed, propose them at the highest point you can. The fewer seams across the codebase, the better - the ideal number is one.
 
 Check with the user that these seams match their expectations.
 
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Write the spec using the template below, then publish it through the configured Issue Tracker operations. For a wayfinder map source, publish the spec as its sibling `.scratch/<effort>/spec.md`. Record the mapped `ready-for-agent` value in a `Status:` line near the top of the published spec. No additional triage is needed.
 
 <spec-template>
 
@@ -30,7 +32,7 @@ The solution to the problem, from the user's perspective.
 
 ## User Stories
 
-A LONG, numbered list of user stories. Each user story should be in the format of:
+A complete, numbered list of user stories. Each user story should be in the format of:
 
 1. As an <actor>, I want a <feature>, so that <benefit>
 
@@ -38,7 +40,15 @@ A LONG, numbered list of user stories. Each user story should be in the format o
 1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
 </user-story-example>
 
-This list of user stories should be extremely extensive and cover all aspects of the feature.
+Keep the set complete and non-overlapping. User stories explain who needs what and why; they are source material for acceptance, not a second acceptance list.
+
+## Acceptance Criteria
+
+The one authoritative acceptance set for this spec. Give every criterion a stable identifier:
+
+AC-1. <independently and objectively verifiable condition>
+
+Together the criteria cover every in-scope promise and every applicable error, boundary, compatibility, migration, or security condition. Any statement elsewhere in the spec that can change whether the work is accepted must be represented here.
 
 ## Implementation Decisions
 

@@ -2,8 +2,8 @@
 
 The `.out-of-scope/` directory in a repo stores persistent records of rejected feature requests. It serves two purposes:
 
-1. **Institutional memory**: why a feature was rejected, so the reasoning isn't lost when the issue is closed
-2. **Deduplication**: when a new issue comes in that matches a prior rejection, the skill can surface the previous decision instead of re-litigating it
+1. **Institutional memory**: why a feature was rejected, so the reasoning isn't lost when the local ticket becomes `wontfix`
+2. **Deduplication**: when a new ticket matches a prior rejection, the skill can surface the previous decision instead of re-litigating it
 
 ## Directory structure
 
@@ -14,7 +14,7 @@ The `.out-of-scope/` directory in a repo stores persistent records of rejected f
 └── graphql-api.md
 ```
 
-One file per **concept**, not per issue. Multiple issues requesting the same thing are grouped under one file.
+One file per **concept**, not per ticket. Multiple tickets requesting the same thing are grouped under one file.
 
 ## File format
 
@@ -48,9 +48,9 @@ interface ThemeConfig {
 
 ## Prior requests
 
-- #42: "Add dark mode support"
-- #87: "Night theme for accessibility"
-- #134: "Dark theme option"
+- `.scratch/theme/issues/42-dark-mode.md`: "Add dark mode support"
+- `.scratch/theme/issues/87-night-theme.md`: "Night theme for accessibility"
+- `.scratch/theme/issues/134-dark-theme.md`: "Dark theme option"
 ```
 
 ### Naming the file
@@ -69,7 +69,7 @@ The reason should be durable. Avoid referencing temporary circumstances ("we're 
 
 ## When to check `.out-of-scope/`
 
-During triage (Step 1: Gather context), read all files in `.out-of-scope/`. When evaluating a new issue:
+During triage (Step 1: Gather context), read all files in `.out-of-scope/`. When evaluating a new ticket:
 
 - Check if the request matches an existing out-of-scope concept
 - Matching is by concept similarity, not keyword: "night theme" matches `dark-mode.md`
@@ -77,29 +77,29 @@ During triage (Step 1: Gather context), read all files in `.out-of-scope/`. When
 
 The maintainer may:
 
-- **Confirm**: the new issue gets added to the existing file's "Prior requests" list, then closed
-- **Reconsider**: the out-of-scope file gets deleted or updated, and the issue proceeds through normal triage
-- **Disagree**: the issues are related but distinct, proceed with normal triage
+- **Confirm**: the new ticket gets added to the existing file's "Prior requests" list, then receives `Status: wontfix`
+- **Reconsider**: the out-of-scope file gets deleted or updated, and the ticket proceeds through normal triage
+- **Disagree**: the tickets are related but distinct, proceed with normal triage
 
 ## When to write to `.out-of-scope/`
 
-Only when an **enhancement** (not a bug) is *rejected* as `wontfix`. This applies to enhancement PRs exactly as it does to issues: a rejected PR is recorded here so the same request doesn't return as fresh code.
+Only when an **enhancement** (not a bug) is rejected as `wontfix`.
 
-Do **not** write here when something is closed as `wontfix` because it's **already implemented**. That's a built feature, not a rejected one; recording it would poison the dedup checks with false rejections. Instead, the closing comment points to where the feature already lives.
+Do **not** write here when something receives `Status: wontfix` because it is **already implemented**. That is a built feature, not a rejected one; recording it would poison the dedup checks with false rejections. Instead, the ticket's Comments section points to where the feature already lives.
 
 The flow:
 
 1. Maintainer decides a feature request is out of scope
 2. Check if a matching `.out-of-scope/` file already exists
-3. If yes: append the new issue to the "Prior requests" list
+3. If yes: append the new ticket to the "Prior requests" list
 4. If no: create a new file with the concept name, decision, reason, and first prior request
-5. Post a comment on the issue explaining the decision and mentioning the `.out-of-scope/` file
-6. Close the issue with the `wontfix` label
+5. Append the decision and `.out-of-scope/` reference under the ticket's `## Comments`
+6. Set the ticket's `Status:` to the mapped `wontfix` value
 
 ## Updating or removing out-of-scope files
 
 If the maintainer changes their mind about a previously rejected concept:
 
 - Delete the `.out-of-scope/` file
-- The skill does not need to reopen old issues; they're historical records
-- The new issue that triggered the reconsideration proceeds through normal triage
+- The skill does not need to change old tickets; they are historical records
+- The new ticket that triggered the reconsideration proceeds through normal triage

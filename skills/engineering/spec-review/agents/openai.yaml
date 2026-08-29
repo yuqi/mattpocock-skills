@@ -1,0 +1,5 @@
+interface:
+  display_name: "Spec Review"
+  short_description: "Review cumulative spec acceptance and integration"
+policy:
+  allow_implicit_invocation: false

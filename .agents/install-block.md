@@ -32,7 +32,7 @@ The plugin is Claude Code only. Everywhere else, [skills.sh](https://skills.sh/m
 npx skills@latest add mattpocock/skills
 ```
 
-Pick the skills you want, and which coding agents to install them on. **The installer lets you choose which skills to take: make sure `setup-matt-pocock-skills` is one of them.**
+Pick the skills you want, and which coding agents to install them on. When selecting skills individually, include `setup-matt-pocock-skills`. `ticket-implement` also needs `tdd`, `ticket-review`, and `code-review`; `ticket-review` and `spec-review` need `code-review`.
 
 </canonical-block>
 
