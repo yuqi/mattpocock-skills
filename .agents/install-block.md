@@ -2,9 +2,23 @@
 
 One install story, one wording. `README.md`, `.changeset/*`, and every page under `docs/` must say **this** and nothing else. Change it here first, then propagate.
 
-`mattpocock-skills` is listed in **Claude Code's official marketplace** (configured name `claude-plugins-official`, source repo `anthropics/claude-plugins-official`), which every Claude Code install has out of the box. There is no marketplace to add first. Official Anthropic marketplaces have auto-update enabled by default ([discover-plugins](https://code.claude.com/docs/en/discover-plugins)), so "updates arrive automatically" is a true claim, not a hope.
+## Codex, and other agents: skills.sh
 
-## Claude Code: the plugin
+[skills.sh](https://skills.sh/mattpocock/skills) is the primary install route for Codex and other Agent Skills-compatible harnesses. It copies editable skill files into the project. Use the whole-set form on `README.md`:
+
+<canonical-block name="skills-sh-whole-set">
+
+```bash
+npx skills@latest add mattpocock/skills
+```
+
+Pick the skills you want, and which coding agents to install them on. When selecting skills individually, include `setup-matt-pocock-skills`. `ticket-implement` also needs `tdd`, `ticket-review`, and `code-review`; `ticket-review` and `spec-review` need `code-review`.
+
+</canonical-block>
+
+## Claude Code compatibility: the plugin
+
+`mattpocock-skills` is also listed in **Claude Code's official marketplace** (configured name `claude-plugins-official`, source repo `anthropics/claude-plugins-official`), which every Claude Code install has out of the box. There is no marketplace to add first. Official Anthropic marketplaces have auto-update enabled by default ([discover-plugins](https://code.claude.com/docs/en/discover-plugins)), so "updates arrive automatically" is a true claim, not a hope.
 
 <canonical-block name="claude-code">
 
@@ -19,20 +33,6 @@ Or, from inside a session:
 ```
 
 It's in Claude Code's official marketplace, so there's nothing to add first, and updates arrive automatically.
-
-</canonical-block>
-
-## Codex, and other agents: skills.sh
-
-The plugin is Claude Code only. Everywhere else, [skills.sh](https://skills.sh/mattpocock/skills) copies editable skill files into the project. Use the whole-set form on `README.md`:
-
-<canonical-block name="skills-sh-whole-set">
-
-```bash
-npx skills@latest add mattpocock/skills
-```
-
-Pick the skills you want, and which coding agents to install them on. When selecting skills individually, include `setup-matt-pocock-skills`. `ticket-implement` also needs `tdd`, `ticket-review`, and `code-review`; `ticket-review` and `spec-review` need `code-review`.
 
 </canonical-block>
 
@@ -54,7 +54,7 @@ npx skills@latest update <name>
 
 ## The two routes are exclusive
 
-The plugin is a managed, read-only bundle you subscribe to. skills.sh writes files you own and edit. Installing both leaves the user with every skill twice: always say "pick one".
+On Claude Code, the plugin is a managed, read-only bundle you subscribe to, while skills.sh writes files you own and edit. Installing both leaves the user with every skill twice: always say "pick one".
 
 ## Not the install story
 
