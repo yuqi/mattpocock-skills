@@ -38,6 +38,8 @@ Pass requires every umbrella and ticket criterion to be Met with no actionable f
 
 The latest `## Review` block is the acceptance result. When the umbrella acceptance set already uses checkboxes, spec review also projects that result into the checklist: Met criteria are checked, while Partial and Not met criteria are unchecked. It does not alter triage status, ticket reviews, or executable-verification history. Its Review-result commit changes only the spec and carries `Issue-Tracker-Review-Result: spec` plus one matching `Issue-Tracker-Spec:` trailer. Commit identities stay internal and do not appear in the spec or runtime report. Spec and ticket files are excluded from the cumulative implementation diff, so repeated review does not grade its own metadata.
 
+The runtime report follows the same aggregation rule as `code-review`: Standards, Spec, and Integration stay separate, and every finding from every axis is retained rather than only the issue that determines the verdict. An axis with no findings says `None`. The Spec section includes coverage totals and every Partial or Not met criterion; the full Met evidence matrix stays in the committed spec instead of being duplicated into the conversation.
+
 ## Common questions
 
 **Do I still need this if every ticket passed `ticket-review`?**
@@ -67,6 +69,7 @@ The prior Review-result was committed, so the worktree is clean before the rebas
 - Every umbrella acceptance identifier appears once in the coverage matrix.
 - Every included ticket criterion appears once under its ticket reference.
 - Standards, Spec, and Integration findings remain under their own headings.
+- The runtime result gives Standards, Spec, and Integration their own headings and retains every finding from each axis, including non-decisive findings in a Block result.
 - The review covers the trailer-derived cumulative boundary without exposing commit hashes.
 - A no-argument run discovers one local spec, every sibling ticket, and a trailer-validated cumulative boundary.
 - A source change during review prevents the result from being written.
