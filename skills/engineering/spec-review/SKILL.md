@@ -85,6 +85,8 @@ Immediately before writing, refetch the spec and every ticket source and compare
 
 Replace the spec's latest top-level `## Review` block, or append one when absent. Preserve every unrelated byte.
 
+When the authoritative acceptance set uses task-list checkboxes, reconcile each checkbox from the validated Umbrella coverage before writing the review: check an identifier only when its result is `Met`, and leave or make it unchecked when its result is `Partial` or `Not met`. Preserve every identifier, criterion wording, and criterion order. Do not introduce checkboxes into a spec whose authoritative acceptance set does not already use them. Spec review owns this cumulative checkbox projection; ticket review and metadata migration do not.
+
 ```markdown
 ## Review
 
@@ -113,7 +115,7 @@ Verdict: <Pass | Pass with follow-up | Block>
 - <checks known to have run, or no executable-verification result was available>
 ```
 
-Do not change the spec's triage `Status` or ticket review blocks. Refetch the spec after writing and verify the new review plus preservation of unrelated content.
+Do not change the spec's triage `Status` or ticket review blocks. Refetch the spec after writing and verify the new review, the acceptance-checkbox projection, and preservation of unrelated content.
 
 Commit only the normalized spec file while preserving every unrelated index and worktree change. Add this caller-provided trailer:
 
@@ -121,7 +123,7 @@ Commit only the normalized spec file while preserving every unrelated index and 
 Issue-Tracker-Spec: <repo-relative spec reference>
 ```
 
-No external commit skill is required. If one is used, supply this exact trailer and require it to preserve the value without inferring or rewriting it. Verify that the new commit changes only the spec, contains exactly one matching spec trailer and no ticket trailer, and leaves the persisted verdict intact. A failed or contaminated commit means persistence is not confirmed; stop and report it.
+No external commit skill is required. If one is used, supply this exact trailer and require it to preserve the value without inferring or rewriting it. Verify that the new commit changes only the spec, contains exactly one matching spec trailer and no ticket trailer, and leaves the persisted verdict and projected acceptance checkboxes intact. A failed or contaminated commit means persistence is not confirmed; stop and report it.
 
 The `Reviewed commit` field remains the pinned implementation commit. Report that SHA, the new Review-result commit SHA, the verdict, and whether persistence was confirmed.
 
