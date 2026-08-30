@@ -1,5 +1,5 @@
 interface:
   display_name: "Migrate Spec Acceptance"
-  short_description: "Backfill legacy spec AC IDs and ticket mappings"
+  short_description: "Backfill IDs and mappings for an existing acceptance set"
 policy:
   allow_implicit_invocation: false

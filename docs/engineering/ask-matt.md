@@ -15,11 +15,12 @@ You invoke this by typing `/ask-matt`; the agent won't reach for it on its own.
 | Two skills that look interchangeable | The line between them, and it is usually one concrete test rather than a matter of taste. [grill-me](https://aihero.dev/skills-grill-me) or [grill-with-docs](https://aihero.dev/skills-grill-with-docs) turns on whether you are in a working directory; [grill-with-docs](https://aihero.dev/skills-grill-with-docs) or [wayfinder](https://aihero.dev/skills-wayfinder) turns on whether the effort fits one session |
 | A long session and a decision about the [context](https://www.aihero.dev/ai-coding-dictionary/context) | The ordered tree over the five options at a phase boundary |
 | An implemented change and uncertainty about review scope | [ticket-review](https://aihero.dev/skills-ticket-review) for one ticket, [code-review](https://aihero.dev/skills-code-review) for a broader branch, or [spec-review](https://aihero.dev/skills-spec-review) for the completed umbrella |
+| An accepted legacy spec whose criteria lack stable IDs or ticket mappings | The beta `migrate-spec-acceptance` repair step, but only when the spec already has a standalone authoritative acceptance set |
 | A skill you have already picked | Nothing useful. Invoke that skill directly. |
 
 ## Prerequisites
 
-The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable, and it only knows the promoted skills in this repo.
+The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable. Most routes use promoted skills; the legacy acceptance repair route points at an in-progress beta skill that must be installed separately.
 
 The tracker-dependent routes (triage, `to-spec`, `to-tickets`, `ticket-implement`, `ticket-review`, `spec-review`) assume [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) has already configured the local markdown Issue Tracker. The router will happily recommend them before that has happened.
 
@@ -27,7 +28,7 @@ The tracker-dependent routes (triage, `to-spec`, `to-tickets`, `ticket-implement
 
 The word the skill gives you to think with is **flow**: a path *through* the skills, not a single one. Naming your situation places you on a flow at a step, which is a different answer from "here is the skill that matches your keywords". Four kinds of route exist, and the skill itself carries them in full:
 
-- **The main flow**, idea to ship. Grill, spec, tickets, then give [ticket-implement](https://aihero.dev/skills-ticket-implement) one ticket or the local ticket directory. It works a multi-ticket dependency frontier sequentially with one fresh context per ticket, persists ticket acceptance, then leaves cumulative spec acceptance and any existing spec-checklist projection to the final gate. Small work stays on [implement](https://aihero.dev/skills-implement), whose upstream review-before-commit flow remains unchanged.
+- **The main flow**, idea to ship. Grill, spec, tickets, then give [ticket-implement](https://aihero.dev/skills-ticket-implement) one ticket or the local ticket directory. It works a multi-ticket dependency frontier sequentially with one fresh context per ticket, persists ticket acceptance, then leaves cumulative spec acceptance and any existing spec-checklist projection to the final gate. A legacy spec that already has an authoritative acceptance section can take the beta `migrate-spec-acceptance` repair step before that final gate; User Stories are never substituted for the missing section. Small work stays on [implement](https://aihero.dev/skills-implement), whose upstream review-before-commit flow remains unchanged.
 - **On-ramps**, for a situation that generates work and then merges onto the main flow: incoming bug reports, something broken, or an effort too foggy and too large to hold in one session. A local ticket that `triage` marks agent-ready enters through `ticket-implement`, so it receives the same persisted ticket acceptance as tickets from `to-tickets`.
 - **Standalones**, off every flow, reached for on their own terms: the prototype, the questionnaire, the merge conflict you are already sitting in.
 - **A vocabulary layer underneath**, the two references the other skills pull in when the words rather than the process are the problem.
@@ -81,6 +82,7 @@ Check the changelog for a rename before assuming it is gone. `writing-great-skil
 - It ends by naming what to type and stops there, instead of starting the work itself.
 - The route it gives back names the context boundary and review boundary, not just a list of skill names.
 - Where two skills are close, it says which one and why the other is wrong for you.
+- For a legacy spec, it distinguishes traceability repair from authoring acceptance criteria and refuses to treat User Stories as the latter.
 - Any claim it makes about another skill's behaviour shows up in the trace as it reading that skill's `SKILL.md`.
 - You recognise your own situation in what it hands back, rather than the nearest generic scenario.
 

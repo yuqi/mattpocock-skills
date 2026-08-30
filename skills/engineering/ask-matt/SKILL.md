@@ -25,6 +25,8 @@ The route most work travels. You have an idea and want it built.
 
    **`/implement`** keeps the generic upstream path: drive **`/tdd`**, run **`/code-review`**, then commit. **`/ticket-implement`** records a fixed point, implements and commits one ticket, then closes it with **`/ticket-review`** before advancing a queue. After every ticket under a multi-ticket spec is accepted, invoke **`/spec-review`** for cumulative Standards, Spec, and Integration acceptance; it also projects that coverage into an existing spec acceptance checklist. Reach for **`/tdd`** on its own when you just want to build one behaviour test-first, and **`/code-review`** on its own whenever you want a broad branch or PR review against a fixed point.
 
+   A legacy spec may need one repair step before `/spec-review`: use the beta **`/migrate-spec-acceptance`** skill when the existing local Markdown spec already has one authoritative acceptance-criteria section, but its criteria lack stable identifiers or ticket mappings. This is traceability repair, not requirements authoring. If the spec only has User Stories or has no standalone acceptance set, the migration stops and those criteria must be authored separately.
+
 ### Context hygiene
 
 Keep steps 1–3 in **one unbroken context window** (don't compact or clear until after `/to-tickets`) so the grilling, spec, and tickets all build on the same thinking. A queue passed to `/ticket-implement` gives each ticket a fresh worker context.

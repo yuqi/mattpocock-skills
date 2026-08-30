@@ -1,6 +1,6 @@
 ---
 name: migrate-spec-acceptance
-description: "Backfill stable acceptance identifiers and ticket mappings for a legacy local Markdown spec without changing requirement semantics."
+description: "Backfill stable identifiers and ticket mappings for a legacy local Markdown spec that already has an authoritative acceptance-criteria section, without deriving criteria or changing requirement semantics."
 disable-model-invocation: true
 ---
 
@@ -30,7 +30,11 @@ Before planning changes:
 
 ## Plan the complete migration
 
-Find the spec's one authoritative acceptance set. Prefer `## Acceptance Criteria`; accept one unambiguous localized equivalent such as `## 验收条件`. Stop without writing if the spec has no acceptance set or has multiple plausible sets.
+Identify the authoritative acceptance set by heading semantics, not by the wording of its items or how cleanly they map to tickets. `## Acceptance Criteria` qualifies, as does one unambiguous localized heading that explicitly means acceptance criteria, such as `## 验收条件`.
+
+`## User Stories` and `## 用户故事` are source material for acceptance, not localized acceptance headings. The same separation applies even when their items are objective, formatted as checklists, or already repeated in implementation tickets. Do not treat another requirements, scope, solution, decision, or testing section as the acceptance set.
+
+Stop without writing when the baseline spec has no qualifying acceptance heading or has multiple plausible acceptance headings. Report the missing or ambiguous acceptance set and require it to be authored or disambiguated separately. Do not rename, copy, move, or derive another section to make this migration possible.
 
 Build the identifier plan in memory:
 
@@ -55,9 +59,9 @@ Every spec identifier must have at least one supported mapping. If any mapping r
 
 Immediately before writing, refetch the spec and every implementation ticket and compare each one byte-for-byte with its snapshot. Stop on any drift.
 
-Apply the completed migration as one patch:
+The completed migration patch is limited to exactly these transformations:
 
-1. Normalize the authoritative heading to `## Acceptance Criteria` when needed.
+1. Normalize the qualifying authoritative acceptance heading to `## Acceptance Criteria` when needed.
 2. Insert each stable identifier after the spec criterion's list or checkbox marker, for example:
 
    ```markdown
@@ -70,7 +74,7 @@ Apply the completed migration as one patch:
    - [x] Existing ticket criterion text. (Spec AC-1) (Spec AC-3)
    ```
 
-Preserve all original criterion text and punctuation before the appended mapping. Preserve checkbox state, `Status`, `Blocked by`, existing Review blocks, comments, and every unrelated byte. Do not modify decision tickets or any path outside the resolved migration scope. A checked ticket criterion remains checked because the mapping adds traceability, not a new acceptance condition.
+Any other change is a non-metadata change and stops the migration before any write or commit. Preserve all original criterion text and punctuation before the appended mapping. Preserve checkbox state, `Status`, `Blocked by`, existing Review blocks, comments, every non-acceptance heading and section body, and every other unrelated byte. Do not modify decision tickets or any path outside the resolved migration scope. A checked ticket criterion remains checked because the mapping adds traceability, not a new acceptance condition.
 
 ## Preserve accepted-ticket persistence
 
@@ -99,10 +103,13 @@ If a modified ticket did not meet the pre-migration acceptance check, leave it u
 
 Validate all of the following:
 
+- The baseline spec contained exactly one qualifying acceptance heading, and that same section remains the authoritative acceptance set.
 - Every spec criterion has exactly one unique stable identifier.
 - Every spec identifier appears in at least one implementation-ticket mapping.
 - No ticket references an unknown identifier or repeats the same mapping on one checklist item.
 - Every file retains its original criterion count, order, wording, and checkbox state after ignoring inserted identifiers, appended mappings, and heading normalization.
+- The spec's section outline is unchanged after ignoring normalization of the one qualifying acceptance heading. Every `User Stories` or `用户故事` heading and its complete section body remain byte-for-byte unchanged.
+- No content was copied, moved, or derived from another section into the acceptance set.
 - Status fields, blockers, Review blocks, comments, and excluded decision tickets are unchanged.
 - Compared with the initial baseline, this migration changed only the resolved spec and mapped implementation tickets.
 - Every carried-forward ticket has one verified ticket-only migration commit and still passes the configured Accepted ticket operation.
