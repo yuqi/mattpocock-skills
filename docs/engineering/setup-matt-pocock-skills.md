@@ -2,7 +2,7 @@
 
 `setup-matt-pocock-skills` configures three conventions for one repo: the local markdown issue tracker, the triage state vocabulary, and the domain-doc layout. It records them as markdown files under `docs/agents/`.
 
-The **Issue Tracker** interface stays in place, but it has one shipped implementation: markdown files under `.scratch/`. The generated contract also defines triage and review operations plus the repo-relative ticket and spec commit references used for implementation scope, committed Review results, and accepted-ticket persistence checks. Downstream skills still read `docs/agents/issue-tracker.md`, so no provider choice is added to each caller.
+The **Issue Tracker** interface stays in place, but it has one shipped implementation: markdown files under `.scratch/`. The generated contract also defines triage and review operations plus the repo-relative ticket and spec commit references used for implementation scope, committed Review results, and accepted-ticket persistence checks. Review-result commits carry an explicit role trailer that acceptance validates, while commit identities remain internal to the workflow. Downstream skills still read `docs/agents/issue-tracker.md`, so no provider choice is added to each caller.
 
 It is a prompt-driven skill, not a deterministic script. It reads your existing `AGENTS.md` or `CLAUDE.md`, your existing domain docs, and any prior local tracker files, then waits for you to confirm before writing anything.
 
@@ -72,7 +72,7 @@ One long-standing complaint says yes, in these words: *"having a skill to set up
 - `docs/agents/issue-tracker.md` and `docs/agents/domain.md` exist, plus `triage-labels.md` if `triage` is installed.
 - An `## Agent skills` section appears in the instruction file your harness actually reads, with a one-line summary pointing at each of those files.
 - `docs/agents/issue-tracker.md` points at `.scratch/<feature>/`, and the triage strings match the values used in local issue files.
-- `docs/agents/issue-tracker.md` defines `## Triage operations`, `## Review operations`, and `## Commit references`, including the `Issue-Tracker-Ticket:` and `Issue-Tracker-Spec:` trailer format.
+- `docs/agents/issue-tracker.md` defines `## Triage operations`, `## Review operations`, and `## Commit references`, including the `Issue-Tracker-Ticket:`, `Issue-Tracker-Spec:`, and `Issue-Tracker-Review-Result:` trailer format.
 - Afterwards, `/to-tickets` publishes without asking you where tickets live, and `/triage` updates the configured local role fields and sections.
 - Nothing in the skill files themselves changed. If setup edited a `SKILL.md`, something went wrong.
 

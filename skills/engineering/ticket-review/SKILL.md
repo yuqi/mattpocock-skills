@@ -91,10 +91,11 @@ Refetch after the write and verify the new block, checkbox outcome, and preserva
 Commit only the normalized ticket file while preserving every unrelated index and worktree change. Add the caller-provided trailers as one contiguous block:
 
 ```text
+Issue-Tracker-Review-Result: ticket
 Issue-Tracker-Ticket: <repo-relative ticket reference>
 Issue-Tracker-Spec: <repo-relative sibling spec reference, when it exists>
 ```
 
-No external commit skill is required. If one is used, supply these exact trailer lines and require it to preserve them without inferring or rewriting their values. Verify that the new commit changes only the ticket, contains exactly one matching ticket trailer and the required sibling spec trailer, and leaves the ticket's persisted verdict intact. A failed or contaminated commit means persistence is not confirmed; stop and report it.
+No external commit skill is required. If one is used, supply these exact trailer lines and require it to preserve them without inferring or rewriting their values. Verify that the new commit changes only the ticket, contains exactly one `Issue-Tracker-Review-Result: ticket` trailer, exactly one matching ticket trailer and the required sibling spec trailer, and leaves the ticket's persisted verdict intact. A failed or contaminated commit means persistence is not confirmed; stop and report it.
 
-Report the pinned implementation SHA at runtime together with the new Review-result commit SHA, the verdict, and whether persistence was confirmed. Do not persist the implementation SHA in the ticket; current scope is rederived from commit trailers when needed.
+Report the normalized ticket reference, verdict, and whether persistence was confirmed. Do not persist or report the pinned implementation commit or Review-result commit hash; current scope is rederived from commit trailers when needed.

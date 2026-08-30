@@ -28,9 +28,9 @@ The review is replaceable rather than cumulative. A later run replaces the previ
 
 Every completed review reconciles the checklist with its coverage: Met is checked, while Partial and Not met are unchecked. A passing verdict therefore checks every box, while Block may leave a partially accepted checklist. The review does not repurpose the ticket's triage `Status`.
 
-The result is committed separately from the implementation. That commit changes only the ticket file and carries the same `Issue-Tracker-Ticket:` and optional `Issue-Tracker-Spec:` trailers as the implementation it evaluates. Requirement files are excluded from the implementation diff, so a retry reviews code and tests rather than the prior Review block. The commit lets a branch rebase cleanly and carries the verdict when that branch is merged into another worktree.
+The result is committed separately from the implementation. That commit changes only the ticket file, carries `Issue-Tracker-Review-Result: ticket`, and preserves the same `Issue-Tracker-Ticket:` and optional `Issue-Tracker-Spec:` references as the implementation it evaluates. Requirement files are excluded from the implementation diff, so a retry reviews code and tests rather than the prior Review block. The commit lets a branch rebase cleanly and carries the verdict when that branch is merged into another worktree.
 
-Later acceptance checks derive persistence from Git rather than trusting the file alone. The newest reachable non-merge commit that changed the ticket must change no other path, carry the exact ticket and optional spec trailers, and contain bytes identical to the current ticket. Only then can a passing Verdict count as completion.
+Later acceptance checks derive persistence from Git rather than trusting the file alone. The newest reachable non-merge commit that changed the ticket must change no other path, carry `Issue-Tracker-Review-Result: ticket` plus the exact ticket and optional spec trailers, and contain bytes identical to the current ticket. Only then can a passing Verdict count as completion.
 
 ## Common questions
 
@@ -53,12 +53,12 @@ No. It commits only the normalized ticket file after the committed implementatio
 ## It's working if
 
 - Every checklist item appears once in the coverage result.
-- The runtime result reports the pinned implementation SHA without persisting a rebase-stale copy in the ticket.
+- The runtime result reports the ticket reference, verdict, and persistence without exposing commit hashes.
 - The review reads and writes one normalized `.scratch/` ticket reference.
 - Every checkbox matches the latest coverage result, including after a regression or partial Block.
 - Re-running replaces the old review instead of adding a second current verdict.
 - The verification note distinguishes inspected evidence from checks known to have run.
-- One Review-result commit changes only the ticket and carries its exact ticket and optional spec trailers.
+- One Review-result commit changes only the ticket and carries its Review-result marker plus exact ticket and optional spec trailers.
 - A passing file Verdict without matching committed bytes and trailers is not accepted.
 
 ## Where it fits

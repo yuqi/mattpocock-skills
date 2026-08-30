@@ -36,7 +36,7 @@ The axes stay separate so a clean Standards report cannot hide a missed requirem
 
 Pass requires every umbrella and ticket criterion to be Met with no actionable findings. Pass with follow-up permits only bounded Non-blocking findings after every criterion is Met. Any Partial or Not met criterion, or any Blocking finding, produces Block. Before the verdict is formed, every umbrella identifier and every ticket criterion must appear exactly once in coverage.
 
-The latest `## Review` block is the acceptance result. When the umbrella acceptance set already uses checkboxes, spec review also projects that result into the checklist: Met criteria are checked, while Partial and Not met criteria are unchecked. It does not alter triage status, ticket reviews, or executable-verification history. Its Review-result commit changes only the spec and carries one matching `Issue-Tracker-Spec:` trailer. Spec and ticket files are excluded from the cumulative implementation diff, so repeated review does not grade its own metadata.
+The latest `## Review` block is the acceptance result. When the umbrella acceptance set already uses checkboxes, spec review also projects that result into the checklist: Met criteria are checked, while Partial and Not met criteria are unchecked. It does not alter triage status, ticket reviews, or executable-verification history. Its Review-result commit changes only the spec and carries `Issue-Tracker-Review-Result: spec` plus one matching `Issue-Tracker-Spec:` trailer. Commit identities stay internal and do not appear in the spec or runtime report. Spec and ticket files are excluded from the cumulative implementation diff, so repeated review does not grade its own metadata.
 
 ## Common questions
 
@@ -58,7 +58,7 @@ No. Review is inspection, not execution. Missing executable evidence is stated p
 
 **What happens after a rebase?**
 
-Run `/spec-review` again. It ignores the old stored SHAs for scope discovery and derives the spec and base from the rebased commits' preserved trailers. If the rewritten history dropped or mixed those references, the review stops instead of guessing.
+Run `/spec-review` again. It derives the spec and base from the rebased commits' preserved trailers. If the rewritten history dropped or mixed those references, the review stops instead of guessing.
 
 The prior Review-result was committed, so the worktree is clean before the rebase. The next completed review replaces the old block and commits the new verdict with the same spec trailer.
 
@@ -67,12 +67,12 @@ The prior Review-result was committed, so the worktree is clean before the rebas
 - Every umbrella acceptance identifier appears once in the coverage matrix.
 - Every included ticket criterion appears once under its ticket reference.
 - Standards, Spec, and Integration findings remain under their own headings.
-- The review names the exact reviewed commit and covers the trailer-derived cumulative boundary.
+- The review covers the trailer-derived cumulative boundary without exposing commit hashes.
 - A no-argument run discovers one local spec, every sibling ticket, and a trailer-validated cumulative boundary.
 - A source change during review prevents the result from being written.
 - Re-running replaces the prior cumulative review rather than appending another current verdict.
 - Existing umbrella checkboxes match the current Met, Partial, and Not met coverage results.
-- One Review-result commit changes only the spec and carries its exact spec trailer.
+- One Review-result commit changes only the spec and carries its Review-result marker plus exact spec trailer.
 
 ## Where it fits
 

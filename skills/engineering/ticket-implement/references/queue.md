@@ -19,10 +19,10 @@ Stop on a missing, ambiguous, duplicate, out-of-contract, or acceptance-checklis
 
 Choose the first ready ticket by the queue's tie-breaker. Never run two ticket workers concurrently in one worktree.
 
-Keep one orchestrator and dispatch every ready ticket to a fresh subagent, one at a time. Give the worker only that ticket and the complete single-ticket workflow. The worker runs `ticket-review` and its reviewer as a nested subagent, then returns only the ticket reference, fixed point, reviewed commit, Review-result commit, checks run, review verdict, and whether persistence was confirmed. Ending that worker provides the context boundary before the next ticket.
+Keep one orchestrator and dispatch every ready ticket to a fresh subagent, one at a time. Give the worker only that ticket and the complete single-ticket workflow. The worker runs `ticket-review` and its reviewer as a nested subagent, then returns only the ticket reference, checks run, review verdict, and whether persistence was confirmed. It does not return commit hashes. Ending that worker provides the context boundary before the next ticket.
 
 After every worker, refetch its ticket and continue only when the persisted verdict is `Pass` or `Pass with follow-up` and its Review-result commit is confirmed; otherwise stop with completed commits and reviews intact. Retain only the worker's compact result, then recompute the frontier from the ticket files before dispatching the next worker.
 
-If nested subagents are unavailable, let the worker stop after its implementation commit and return the ticket reference, fixed point, committed `HEAD`, and checks run. The orchestrator then calls the Skill tool with "ticket-review" using the returned fixed point and ticket reference.
+If nested subagents are unavailable, the orchestrator runs the complete single-ticket workflow directly instead of asking a worker to return commit identities across the context boundary.
 
 Do not invoke `spec-review`; it remains the user's separate cumulative gate after the queue is complete.

@@ -90,7 +90,6 @@ When the authoritative acceptance set uses task-list checkboxes, reconcile each 
 ```markdown
 ## Review
 
-Reviewed commit: <full SHA>
 Reviewed at: <ISO-8601 timestamp>
 Verdict: <Pass | Pass with follow-up | Block>
 
@@ -117,14 +116,15 @@ Verdict: <Pass | Pass with follow-up | Block>
 
 Do not change the spec's triage `Status` or ticket review blocks. Refetch the spec after writing and verify the new review, the acceptance-checkbox projection, and preservation of unrelated content.
 
-Commit only the normalized spec file while preserving every unrelated index and worktree change. Add this caller-provided trailer:
+Commit only the normalized spec file while preserving every unrelated index and worktree change. Add these caller-provided trailers as one contiguous block:
 
 ```text
+Issue-Tracker-Review-Result: spec
 Issue-Tracker-Spec: <repo-relative spec reference>
 ```
 
-No external commit skill is required. If one is used, supply this exact trailer and require it to preserve the value without inferring or rewriting it. Verify that the new commit changes only the spec, contains exactly one matching spec trailer and no ticket trailer, and leaves the persisted verdict and projected acceptance checkboxes intact. A failed or contaminated commit means persistence is not confirmed; stop and report it.
+No external commit skill is required. If one is used, supply these exact trailer lines and require it to preserve them without inferring or rewriting their values. Verify that the new commit changes only the spec, contains exactly one `Issue-Tracker-Review-Result: spec` trailer, exactly one matching spec trailer and no ticket trailer, and leaves the persisted verdict and projected acceptance checkboxes intact. A failed or contaminated commit means persistence is not confirmed; stop and report it.
 
-The `Reviewed commit` field remains the pinned implementation commit. Report that SHA, the new Review-result commit SHA, the verdict, and whether persistence was confirmed.
+Report the normalized spec reference, verdict, and whether persistence was confirmed. Do not persist or report the pinned implementation commit or Review-result commit hash.
 
 When the verdict is `Block`, also report the exact `Issue-Tracker-Spec: <repo-relative spec reference>` trailer that every follow-up implementation commit must preserve before this review is run again.

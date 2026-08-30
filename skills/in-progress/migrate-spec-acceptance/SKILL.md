@@ -25,7 +25,7 @@ Before planning changes:
 - Record `git status --short` and the current index and worktree diff for every target.
 - Read and retain complete byte snapshots of the spec and every implementation ticket.
 - Record each file's acceptance-criterion count, wording, order, and checkbox state.
-- Evaluate and record whether each ticket currently passes the configured Accepted ticket operation.
+- Evaluate and record each ticket's pre-migration acceptance. Require a current `Pass` or `Pass with follow-up` Review plus every configured persisted-ticket check except the new `Issue-Tracker-Review-Result: ticket` marker. The marker may already exist, but its absence is the legacy state this migration repairs.
 - Treat all changes outside the resolved spec and implementation tickets as pre-existing and out of scope.
 
 ## Plan the complete migration
@@ -76,23 +76,24 @@ Preserve all original criterion text and punctuation before the appended mapping
 
 Validate the complete metadata-only patch before creating any commit. A modified ticket is eligible to carry its existing acceptance forward only when:
 
-- it passed the configured Accepted ticket operation before migration;
+- it met the recorded pre-migration acceptance check before migration;
 - its criterion wording, order, granularity, and checkbox state are unchanged after removing the appended mapping annotations;
 - its `Status`, blockers, Review block, comments, and other content are byte-for-byte unchanged;
 - the only additions are valid `(Spec AC-N)` annotations.
 
-For each eligible modified ticket, create one commit that changes only that ticket while preserving every unrelated index and worktree change. Use `git commit --only -- <ticket-reference>` (with the message supplied through `-F -`) so unrelated staged paths cannot enter the commit. Add exactly one matching ticket trailer and one matching sibling spec trailer as one contiguous block:
+For each eligible modified ticket, create one commit that changes only that ticket while preserving every unrelated index and worktree change. Use `git commit --only -- <ticket-reference>` (with the message supplied through `-F -`) so unrelated staged paths cannot enter the commit. Add exactly one ticket Review-result marker, one matching ticket trailer, and one matching sibling spec trailer as one contiguous block:
 
 ```text
+Issue-Tracker-Review-Result: ticket
 Issue-Tracker-Ticket: <repo-relative ticket reference>
 Issue-Tracker-Spec: <repo-relative spec reference>
 ```
 
-Use a migration title, not a review title. Verify from the resulting commit object that it changes only the ticket, contains exactly those reference trailers, and leaves the existing verdict, checkbox state, and mappings intact. This reestablishes the configured persisted-ticket check without claiming that another review ran.
+Use a migration title, not a review title. Verify from the resulting commit object that it changes only the ticket, contains exactly the Review-result marker and two reference trailers, and leaves the existing verdict, checkbox state, and mappings intact. The marker means this commit persists the carried-forward Review result; it does not claim that another review ran.
 
 Never combine several tickets into one commit. A batch commit would invalidate the ticket-only persistence rule. Leave the spec modification unstaged and uncommitted. Preserve its checkbox state until the later cumulative acceptance result projects coverage and persists the numbered spec together with its own verdict.
 
-If a modified ticket was not Accepted before migration, leave it uncommitted and report that it still requires its normal acceptance workflow. If any non-metadata ticket change is detected, stop before committing that ticket and do not carry its verdict forward.
+If a modified ticket did not meet the pre-migration acceptance check, leave it uncommitted and report that it still requires its normal acceptance workflow. If any non-metadata ticket change is detected, stop before committing that ticket and do not carry its verdict forward.
 
 ## Validate and report
 
@@ -108,4 +109,4 @@ Validate all of the following:
 - The spec remains unstaged and uncommitted, and every unrelated index and worktree change matches the initial baseline.
 - `git diff --check` passes for the remaining modified paths.
 
-Report the normalized spec reference, implementation-ticket count, identifier set, modified files, complete `AC-N` to ticket-item mapping, validation results, each ticket migration commit SHA, carried-forward Accepted results, tickets that still require review, and confirmation that the spec and unrelated changes were not staged or committed.
+Report the normalized spec reference, implementation-ticket count, identifier set, modified files, complete `AC-N` to ticket-item mapping, validation results, carried-forward Accepted results, tickets that still require review, and confirmation that the spec and unrelated changes were not staged or committed. Do not report migration commit hashes.
