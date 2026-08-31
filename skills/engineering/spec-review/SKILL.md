@@ -1,7 +1,6 @@
 ---
 name: spec-review
-description: "Review a completed multi-ticket spec at committed HEAD across Standards, Spec, and Integration, then write the cumulative verdict back to the spec."
-disable-model-invocation: true
+description: "Review a completed multi-ticket spec at committed HEAD across Standards, Spec, and Integration, then persist its cumulative acceptance verdict. Use for the final umbrella gate or from a review and repair workflow."
 ---
 
 # Spec Review

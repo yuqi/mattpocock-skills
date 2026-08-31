@@ -15,7 +15,6 @@ Reachable only when you type them (Codex: `policy.allow_implicit_invocation: fal
 - **[to-tickets](./to-tickets/SKILL.md)**: Break a plan or spec into tracer-bullet tickets with blocking edges and mapped acceptance checklists.
 - **[implement](./implement/SKILL.md)**: Build the work described by a spec or set of tickets, driving `/tdd` at pre-agreed seams and closing out with `/code-review` before committing.
 - **[ticket-implement](./ticket-implement/SKILL.md)**: Implement and accept one local ticket or a sequential ticket queue, with an isolated context per ticket.
-- **[spec-review](./spec-review/SKILL.md)**: Review a completed multi-ticket spec across cumulative Standards, Spec, and Integration axes and write back one verdict.
 - **[wayfinder](./wayfinder/SKILL.md)**: Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on the issue tracker, resolved one at a time until the way to the destination is clear.
 
 ## Model-invoked
@@ -31,5 +30,6 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 - **[codebase-design](./codebase-design/SKILL.md)**: Shared discipline and vocabulary for designing deep modules: small interfaces, clean seams, testable through the interface.
 - **[code-review](./code-review/SKILL.md)**: Two-axis review of the diff since a fixed point: **Standards** (does it follow the repo's coding standards, plus a Fowler smell baseline?) and **Spec** (does it faithfully implement the originating issue/spec?), run as parallel sub-agents.
 - **[ticket-review](./ticket-review/SKILL.md)**: Review one implemented ticket against its acceptance checklist and write the latest verdict back to it.
+- **[spec-review](./spec-review/SKILL.md)**: Review a completed multi-ticket spec across cumulative Standards, Spec, and Integration axes and write back one verdict.
 - **[resolving-merge-conflicts](./resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation, never `--abort`.
 - **[wizard](./wizard/SKILL.md)**: Generate an interactive bash wizard that walks a human through steps only they can perform: provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.

@@ -14,21 +14,21 @@ You invoke this by typing `/ask-matt`; the agent won't reach for it on its own.
 | Bugs and requests arriving from other people | The [triage](https://aihero.dev/skills-triage) on-ramp, and why [tickets](https://www.aihero.dev/ai-coding-dictionary/ticket) you generated yourself don't belong on it |
 | Two skills that look interchangeable | The line between them, and it is usually one concrete test rather than a matter of taste. [grill-me](https://aihero.dev/skills-grill-me) or [grill-with-docs](https://aihero.dev/skills-grill-with-docs) turns on whether you are in a working directory; [grill-with-docs](https://aihero.dev/skills-grill-with-docs) or [wayfinder](https://aihero.dev/skills-wayfinder) turns on whether the effort fits one session |
 | A long session and a decision about the [context](https://www.aihero.dev/ai-coding-dictionary/context) | The ordered tree over the five options at a phase boundary |
-| An implemented change and uncertainty about review scope | [ticket-review](https://aihero.dev/skills-ticket-review) for one ticket, [code-review](https://aihero.dev/skills-code-review) for a broader branch, or [spec-review](https://aihero.dev/skills-spec-review) for the completed umbrella |
+| An implemented change and uncertainty about review scope | [ticket-review](https://aihero.dev/skills-ticket-review) for one ticket, [code-review](https://aihero.dev/skills-code-review) for a broader branch, [spec-review](https://aihero.dev/skills-spec-review) for one completed-umbrella verdict, or the beta `closeout-spec` for its review and repair loop |
 | An accepted legacy spec whose criteria lack stable IDs or ticket mappings | The beta `migrate-spec-acceptance` repair step, but only when the spec already has a standalone authoritative acceptance set |
 | A skill you have already picked | Nothing useful. Invoke that skill directly. |
 
 ## Prerequisites
 
-The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable. Most routes use promoted skills; the legacy acceptance repair route points at an in-progress beta skill that must be installed separately.
+The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable. Most routes use promoted skills; the parallel whole-spec executor, final review and repair loop, and legacy acceptance repair route point at in-progress beta skills that must be installed separately.
 
-The tracker-dependent routes (triage, `to-spec`, `to-tickets`, `ticket-implement`, `ticket-review`, `spec-review`) assume [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) has already configured the local markdown Issue Tracker. The router will happily recommend them before that has happened.
+The tracker-dependent routes (triage, `to-spec`, `to-tickets`, `ticket-implement`, `ticket-review`, `spec-review`, `implement-spec`, `closeout-spec`) assume [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) has already configured the local markdown Issue Tracker. The router will happily recommend them before that has happened.
 
 ## Flows, not skills
 
 The word the skill gives you to think with is **flow**: a path *through* the skills, not a single one. Naming your situation places you on a flow at a step, which is a different answer from "here is the skill that matches your keywords". Four kinds of route exist, and the skill itself carries them in full:
 
-- **The main flow**, idea to ship. Grill, spec, tickets, then give [ticket-implement](https://aihero.dev/skills-ticket-implement) one ticket or the local ticket directory. It works a multi-ticket dependency frontier sequentially with one fresh context per ticket, persists ticket acceptance, then leaves cumulative spec acceptance and any existing spec-checklist projection to the final gate. A legacy spec that already has an authoritative acceptance section can take the beta `migrate-spec-acceptance` repair step before that final gate; User Stories are never substituted for the missing section. Small work stays on [implement](https://aihero.dev/skills-implement), whose upstream review-before-commit flow remains unchanged.
+- **The main flow**, idea to ship. Grill, spec, tickets, then give [ticket-implement](https://aihero.dev/skills-ticket-implement) one ticket or the local ticket directory. It works a multi-ticket dependency frontier sequentially with one fresh context per ticket and persists ticket acceptance. The beta `implement-spec` is an alternate executor for a concurrent whole-spec build on one PR branch, but it currently stops at broad code review and does not produce the per-ticket acceptance required by the local cumulative gate. Once every ticket is accepted, choose either one cumulative [spec-review](https://aihero.dev/skills-spec-review) verdict or the beta `closeout-spec` loop that repairs Blocking findings and repeats the same gate. A legacy spec that already has an authoritative acceptance section can take the beta `migrate-spec-acceptance` repair step before that final gate; User Stories are never substituted for the missing section. Small work stays on [implement](https://aihero.dev/skills-implement), whose upstream review-before-commit flow remains unchanged.
 - **On-ramps**, for a situation that generates work and then merges onto the main flow: incoming bug reports, something broken, or an effort too foggy and too large to hold in one session. A local ticket that `triage` marks agent-ready enters through `ticket-implement`, so it receives the same persisted ticket acceptance as tickets from `to-tickets`.
 - **Standalones**, off every flow, reached for on their own terms: the prototype, the questionnaire, the merge conflict you are already sitting in.
 - **A vocabulary layer underneath**, the two references the other skills pull in when the words rather than the process are the problem.
@@ -51,11 +51,11 @@ Two of those are routinely got wrong, which is why the router carries the order 
 
 **Isn't there just a list of the skills in the right order?**
 
-People keep asking for one in the README. This skill is that list: it is what it exists for. A static table would say `wayfinder → to-spec → to-tickets → ticket-implement → ticket-review → spec-review` and be wrong for most situations, because the interesting parts are the branches: is there a codebase, does the build span sessions, can this question be settled by talking, and is the review boundary one ticket or the whole umbrella. The honest cost is that the router is hand-maintained and lags the repo.
+People keep asking for one in the README. This skill is that list: it is what it exists for. A static table would say `wayfinder → to-spec → to-tickets → ticket-implement → ticket-review → closeout-spec` and be wrong for most situations, because the interesting parts are the branches: is there a codebase, does the build span sessions, can this question be settled by talking, is the executor sequential or concurrent, and is the final boundary one review or a review and repair loop. The honest cost is that the router is hand-maintained and lags the repo.
 
 **It told me half the skills aren't installed.**
 
-A known bug, unfixed. Most of the skills the router routes you through set `disable-model-invocation: true`, which means the harness leaves them out of the skill list it injects into the agent's context. The agent reads that list as exhaustive and reports them missing. One reported session had it declare the whole spec-and-tickets flow absent and reroute to bare `/grilling` and `/tdd`. Thirteen of the plugin's twenty-two skills carry the flag, so this is the common case rather than an edge. They are installed. Type the slash command anyway, or check `.claude-plugin/plugin.json`, which is the authority on what is present.
+A known bug, unfixed. Most of the skills the router routes you through set `disable-model-invocation: true`, which means the harness leaves them out of the skill list it injects into the agent's context. The agent reads that list as exhaustive and reports them missing. One reported session had it declare the whole spec-and-tickets flow absent and reroute to bare `/grilling` and `/tdd`. Fifteen of the plugin's twenty-eight skills carry the flag, so this is the common case rather than an edge. They are installed. Type the slash command anyway, or check `.claude-plugin/plugin.json`, which is the authority on what is present.
 
 **It described a skill's behaviour, and the skill doesn't do that.**
 
@@ -82,6 +82,7 @@ Check the changelog for a rename before assuming it is gone. `writing-great-skil
 - It ends by naming what to type and stops there, instead of starting the work itself.
 - The route it gives back names the context boundary and review boundary, not just a list of skill names.
 - Where two skills are close, it says which one and why the other is wrong for you.
+- For a completed umbrella, it distinguishes one cumulative verdict from the beta loop that owns Blocking repairs.
 - For a legacy spec, it distinguishes traceability repair from authoring acceptance criteria and refuses to treat User Stories as the latter.
 - Any claim it makes about another skill's behaviour shows up in the trace as it reading that skill's `SKILL.md`.
 - You recognise your own situation in what it hands back, rather than the nearest generic scenario.

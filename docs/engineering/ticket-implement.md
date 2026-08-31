@@ -15,7 +15,8 @@ You invoke this by typing `/ticket-implement`; the agent won't reach for it on i
 | Every ticket for one feature | `/ticket-implement .scratch/<feature>/issues/` |
 | A small spec or plan in the conversation | [implement](https://aihero.dev/skills-implement) |
 | One committed ticket only needs acceptance | [ticket-review](https://aihero.dev/skills-ticket-review) |
-| The whole umbrella is implemented | [spec-review](https://aihero.dev/skills-spec-review) |
+| The whole umbrella needs one cumulative verdict | [spec-review](https://aihero.dev/skills-spec-review) |
+| The whole umbrella needs review and Blocking repairs until it can pass | The beta `closeout-spec` workflow |
 
 ## Prerequisites
 
@@ -74,7 +75,7 @@ No. `ticket-implement` can commit directly. A commit helper is compatible when i
 - Every completed ticket has a committed `Pass` or `Pass with follow-up` review.
 - Every implementation commit contains the verified local ticket and spec trailers that apply to it.
 - The parent receives a compact result before the next fresh worker starts.
-- `spec-review` is not invoked automatically after the queue.
+- Neither `spec-review` nor `closeout-spec` starts automatically after the queue.
 
 ## Where it fits
 
@@ -84,4 +85,4 @@ No. `ticket-implement` can commit directly. A commit helper is compatible when i
 grill-with-docs → to-spec → to-tickets → ticket-implement → ticket-review → spec-review
 ```
 
-Upstream, [to-tickets](https://aihero.dev/skills-to-tickets) creates the local checklist and blocking edges. Internally, [ticket-review](https://aihero.dev/skills-ticket-review) accepts each committed slice. [implement](https://aihero.dev/skills-implement) remains the generic build path, and [spec-review](https://aihero.dev/skills-spec-review) remains the separate cumulative gate. [ask-matt](https://aihero.dev/skills-ask-matt) routes between them.
+Upstream, [to-tickets](https://aihero.dev/skills-to-tickets) creates the local checklist and blocking edges. Internally, [ticket-review](https://aihero.dev/skills-ticket-review) accepts each committed slice. [implement](https://aihero.dev/skills-implement) remains the generic build path. After the queue, choose [spec-review](https://aihero.dev/skills-spec-review) for one cumulative verdict or the beta `closeout-spec` workflow for repeated review and Blocking repairs. [ask-matt](https://aihero.dev/skills-ask-matt) routes between them.

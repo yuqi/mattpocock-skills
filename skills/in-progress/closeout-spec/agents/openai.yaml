@@ -1,0 +1,5 @@
+interface:
+  display_name: "Closeout Spec"
+  short_description: "Review and fix a spec until no blockers remain"
+policy:
+  allow_implicit_invocation: false

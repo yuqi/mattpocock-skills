@@ -39,4 +39,4 @@ Before review, enumerate every commit after the recorded or derived fixed point 
 
 Call the Skill tool with "ticket-review" using the recorded fixed point and ticket reference. Finish only after refetching the ticket, confirming that its persisted verdict is `Pass` or `Pass with follow-up`, and verifying the Review-result commit described by the configured Commit references. Otherwise stop with the implementation and Review result intact.
 
-`spec-review` remains a separate cumulative gate after every ticket under an umbrella spec has been implemented.
+After every ticket under an umbrella spec is accepted, tell the user to choose `/spec-review` for one cumulative verdict or the beta `/closeout-spec` for the review and Blocking-repair loop. Do not invoke either from this workflow.

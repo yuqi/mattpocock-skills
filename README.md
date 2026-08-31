@@ -200,7 +200,6 @@ Skills I use daily for code work.
 - **[to-tickets](./skills/engineering/to-tickets/SKILL.md)**: Break a plan or spec into tracer-bullet tickets with blocking edges and mapped acceptance checklists.
 - **[implement](./skills/engineering/implement/SKILL.md)**: Build the work described by a spec or set of tickets, driving `/tdd` at pre-agreed seams and closing out with `/code-review` before committing.
 - **[ticket-implement](./skills/engineering/ticket-implement/SKILL.md)**: Implement and accept one local ticket or a sequential ticket queue, with an isolated context per ticket.
-- **[spec-review](./skills/engineering/spec-review/SKILL.md)**: Review a completed multi-ticket spec across cumulative Standards, Spec, and Integration axes and write back one verdict.
 - **[wayfinder](./skills/engineering/wayfinder/SKILL.md)**: Plan a huge chunk of work, more than one agent session can hold, as a shared map of decision tickets on the issue tracker, and resolve them one at a time until the way to the destination is clear.
 
 **Model-invoked**
@@ -213,6 +212,7 @@ Skills I use daily for code work.
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.md)**: Shared discipline and vocabulary for designing deep modules: a lot of behaviour behind a small interface, placed at a clean seam, testable through that interface.
 - **[code-review](./skills/engineering/code-review/SKILL.md)**: Two-axis review of the diff since a fixed point: **Standards** (does it follow the repo's coding standards, plus a Fowler smell baseline?) and **Spec** (does it faithfully implement the originating issue/spec?), run as parallel sub-agents so neither pollutes the other.
 - **[ticket-review](./skills/engineering/ticket-review/SKILL.md)**: Review one implemented ticket against its acceptance checklist and write the latest verdict back to it.
+- **[spec-review](./skills/engineering/spec-review/SKILL.md)**: Review a completed multi-ticket spec across cumulative Standards, Spec, and Integration axes and write back one verdict.
 - **[resolving-merge-conflicts](./skills/engineering/resolving-merge-conflicts/SKILL.md)**: Work through an in-progress git merge or rebase conflict hunk by hunk, resolving by intent traced to each side's primary source, then finish the operation (never `--abort`).
 - **[wizard](./skills/engineering/wizard/SKILL.md)**: Generate an interactive bash wizard that walks a human through steps only they can perform: provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.
 

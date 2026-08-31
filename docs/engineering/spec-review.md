@@ -6,13 +6,14 @@ It reviews the umbrella, not another ticket. The separate Integration axis exist
 
 ## When to reach for it
 
-You invoke this by typing `/spec-review`, and the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) will not reach for it on its own.
+Type `/spec-review`, or the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) reaches for it automatically when a completed umbrella needs cumulative acceptance or another workflow needs the same gate.
 
 | What needs review | Use |
 | --- | --- |
 | One implemented ticket | [ticket-review](https://aihero.dev/skills-ticket-review) |
 | A broader branch without one umbrella acceptance set | [code-review](https://aihero.dev/skills-code-review) |
 | The complete result of a multi-ticket spec | `/spec-review` |
+| Review, repair, and re-review until no Blocking finding remains | The beta `closeout-spec` workflow |
 
 ## Prerequisites
 
@@ -58,6 +59,10 @@ No. Review is inspection, not execution. Missing executable evidence is stated p
 
 `spec-review` does. Ticket completion and ticket review establish slice-level evidence, but only the cumulative umbrella review checks a spec criterion as Met. A metadata migration may add stable identifiers and ticket mappings, but it preserves the existing spec checkbox state until this review runs.
 
+**What happens when the verdict is Block?**
+
+`spec-review` preserves the complete verdict and stops without editing implementation. Use the beta `closeout-spec` workflow when you want every Blocking finding assigned to an implementation repair, validated, committed with the same spec trailer, and independently reviewed again. Invoke `spec-review` directly when you only want the acceptance result.
+
 **What happens after a rebase?**
 
 Run `/spec-review` again. It derives the spec and base from the rebased commits' preserved trailers. If the rewritten history dropped or mixed those references, the review stops instead of guessing.
@@ -79,4 +84,4 @@ The prior Review-result was committed, so the worktree is clean before the rebas
 
 ## Where it fits
 
-`spec-review` is the final cumulative gate on the multi-session build path. [to-spec](https://aihero.dev/skills-to-spec) creates the umbrella criteria, [to-tickets](https://aihero.dev/skills-to-tickets) maps them into slice checklists, and [ticket-review](https://aihero.dev/skills-ticket-review) accepts each slice. [code-review](https://aihero.dev/skills-code-review) remains the broad diff report when no umbrella gate applies, and [ask-matt](https://aihero.dev/skills-ask-matt) routes the flow.
+`spec-review` is the reusable cumulative gate on the multi-session build path. [to-spec](https://aihero.dev/skills-to-spec) creates the umbrella criteria, [to-tickets](https://aihero.dev/skills-to-tickets) maps them into slice checklists, and [ticket-review](https://aihero.dev/skills-ticket-review) accepts each slice. The beta `closeout-spec` workflow owns the repair loop around this gate. [code-review](https://aihero.dev/skills-code-review) remains the broad diff report when no umbrella gate applies, and [ask-matt](https://aihero.dev/skills-ask-matt) routes the flow.

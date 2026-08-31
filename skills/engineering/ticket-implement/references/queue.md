@@ -25,4 +25,4 @@ After every worker, refetch its ticket and continue only when the persisted verd
 
 If nested subagents are unavailable, the orchestrator runs the complete single-ticket workflow directly instead of asking a worker to return commit identities across the context boundary.
 
-Do not invoke `spec-review`; it remains the user's separate cumulative gate after the queue is complete.
+After the queue is complete, tell the user to choose `/spec-review` for one cumulative verdict or the beta `/closeout-spec` for the review and Blocking-repair loop. Do not invoke either from this workflow.
