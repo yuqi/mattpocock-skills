@@ -38,6 +38,13 @@ Lead each configurable section with the recommended answer so the user can accep
 
 The issue tracker has one implementation: local markdown files under `.scratch/<feature>/`. Tell the user this is what setup will configure, then use [issue-tracker-local.md](./issue-tracker-local.md) for `docs/agents/issue-tracker.md`.
 
+These setup-owned headings are machine-readable contract identifiers:
+
+- In `docs/agents/issue-tracker.md`: `## Review operations`, `## Triage operations`, `## Commit references`, and `## Wayfinding operations`, plus every inline Markdown heading identifier from [issue-tracker-local.md](./issue-tracker-local.md).
+- In the chosen instruction file: `## Agent skills`, `### Issue tracker`, `### Domain docs`, and the conditional `### Triage labels`.
+
+Emit every applicable contract heading exactly once in both the draft and written files, preserving its English spelling, capitalization, spacing, and heading level in every locale. Preserve each inline artifact-heading identifier verbatim. Adapt surrounding prose while keeping these headings and the contracts they identify intact.
+
 **Section B: Triage state vocabulary.** Skip this section entirely if the `triage` skill isn't installed (exploration told you), since an uninstalled skill needs no state mapping.
 
 If it is installed, ask exactly one question:
@@ -98,5 +105,7 @@ Then write the docs files using the seed templates in this skill folder as a sta
 - [domain.md](./domain.md): domain doc consumer rules + layout
 
 ### 5. Done
+
+Refetch `docs/agents/issue-tracker.md` and the chosen instruction file. Verify that every applicable contract heading listed in step 2 appears exactly once at its specified heading level and that every inline artifact-heading identifier remains verbatim before reporting completion.
 
 Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-run this skill when they need to refresh generated contracts from the current templates or restart setup.

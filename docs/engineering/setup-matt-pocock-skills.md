@@ -47,6 +47,20 @@ No. This distribution keeps the Issue Tracker interface but ships only the local
 
 Re-run it when you want to refresh the generated files from the current templates or restart the setup. There is no tracker-switching mode because local markdown is the only implementation.
 
+**Can I translate the generated headings?**
+
+Keep setup's contract headings exactly as written, even in a non-English repo:
+
+| Surface | Protected headings |
+| --- | --- |
+| `docs/agents/issue-tracker.md` | `## Review operations`, `## Triage operations`, `## Commit references`, `## Wayfinding operations` |
+| `AGENTS.md` or `CLAUDE.md` | `## Agent skills`, `### Issue tracker`, `### Domain docs`, and `### Triage labels` when triage is installed |
+| Specs and implementation tickets | `## Acceptance Criteria`, `## Review`, `## Comments` |
+| Triage-managed ticket sections | `## Triage Notes`, `## Agent Brief` |
+| Wayfinder maps and decision tickets | `## Destination`, `## Notes`, `## Decisions so far`, `## Not yet specified`, `## Out of scope`, `## Question`, `## Answer` |
+
+Engineering skills use these headings as machine-readable contract markers and configuration pointers. Translating, renaming, or changing their level can make preflight checks treat the configuration as stale or keep a later setup run from finding the existing block. Surrounding prose can use the repo's normal language while preserving the contract's meaning.
+
 **Which instruction file does it update?**
 
 It prefers `AGENTS.md`, the cross-agent instruction file Codex reads. If only `CLAUDE.md` exists, it edits that file instead so Claude-only repos keep working. If both harnesses share the repo, keep `AGENTS.md` canonical and make `CLAUDE.md` a symlink or pointer to it. If neither file exists, the skill asks which one to create rather than guessing your harness.
@@ -70,9 +84,9 @@ One long-standing complaint says yes, in these words: *"having a skill to set up
 ## It's working if
 
 - `docs/agents/issue-tracker.md` and `docs/agents/domain.md` exist, plus `triage-labels.md` if `triage` is installed.
-- An `## Agent skills` section appears in the instruction file your harness actually reads, with a one-line summary pointing at each of those files.
-- `docs/agents/issue-tracker.md` points at `.scratch/<feature>/`, and the triage strings match the values used in local issue files.
-- `docs/agents/issue-tracker.md` defines `## Triage operations`, `## Review operations`, and `## Commit references`, including the `Issue-Tracker-Ticket:`, `Issue-Tracker-Spec:`, and `Issue-Tracker-Review-Result:` trailer format.
+- An exact `## Agent skills` section appears in the instruction file your harness actually reads, with exact `### Issue tracker` and `### Domain docs` pointers plus `### Triage labels` when triage is installed.
+- `docs/agents/issue-tracker.md` points at `.scratch/<feature>/`, preserves its inline artifact-heading identifiers, and the triage strings match the values used in local issue files.
+- `docs/agents/issue-tracker.md` defines `## Triage operations`, `## Review operations`, `## Commit references`, and `## Wayfinding operations`, including the `Issue-Tracker-Ticket:`, `Issue-Tracker-Spec:`, and `Issue-Tracker-Review-Result:` trailer format.
 - Afterwards, `/to-tickets` publishes without asking you where tickets live, and `/triage` updates the configured local role fields and sections.
 - Nothing in the skill files themselves changed. If setup edited a `SKILL.md`, something went wrong.
 
