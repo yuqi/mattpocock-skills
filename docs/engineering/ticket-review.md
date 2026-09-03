@@ -2,7 +2,7 @@
 
 `ticket-review` is the acceptance gate for one implemented Issue Tracker [ticket](https://www.aihero.dev/ai-coding-dictionary/ticket). It pins the committed diff, gives one [subagent](https://www.aihero.dev/ai-coding-dictionary/subagent) the ticket checklist and repository standards, then writes and commits Pass, Pass with follow-up, or Block in the ticket's current `## Review` block.
 
-It reviews one slice, not the whole branch or umbrella spec. It never runs tests and never treats inspected test code as proof that verification passed.
+It reviews one slice, not the whole branch or umbrella spec. The reviewer inspects code without running it; the owning session runs targeted tests before writing a passing verdict. Inspected test code alone never proves that verification passed.
 
 ## When to reach for it
 
@@ -40,7 +40,11 @@ You can, but it reviews Standards and Spec as two broad, separate reports and fo
 
 **Does Pass mean the tests ran?**
 
-No. The reviewer inspects committed test artifacts and any verification evidence supplied by implementation. The verification note states which checks are known to have run, or says that no executable result was available.
+Yes. The full test suite is not required by this gate. The verification note records the commands and outcomes.
+
+- Before writing `Pass` or `Pass with follow-up`, targeted tests covering the ticket's changed behavior and acceptance criteria must pass.
+- Failed or unavailable targeted verification produces `Block`, so a restart cannot skip an unverified ticket as accepted.
+- A review that already has Blocking findings does not trigger an additional test run.
 
 **What if the ticket changes while the reviewer is working?**
 
@@ -57,7 +61,7 @@ No. It commits only the normalized ticket file after the committed implementatio
 - The review reads and writes one normalized `.scratch/` ticket reference.
 - Every checkbox matches the latest coverage result, including after a regression or partial Block.
 - Re-running replaces the old review instead of adding a second current verdict.
-- The verification note distinguishes inspected evidence from checks known to have run.
+- A passing verdict includes targeted-test evidence for the reviewed implementation.
 - One Review-result commit changes only the ticket and carries its Review-result marker plus exact ticket and optional spec trailers.
 - A passing file Verdict without matching committed bytes and trailers is not accepted.
 

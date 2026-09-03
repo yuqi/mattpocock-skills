@@ -22,8 +22,8 @@ The Issue Tracker configuration required by `spec-review` must be present, and e
 
 2. Accept a review round only when it formed a cumulative verdict and confirmed persistence of the Review-result commit. Refetch the normalized spec and confirm its latest top-level `## Review` block carries that verdict.
 
-   - `Pass` completes the loop.
-   - `Pass with follow-up` completes the loop and leaves every Non-blocking finding visible in the final report.
+   - `Pass` proceeds to final validation.
+   - `Pass with follow-up` proceeds to final validation and leaves every Non-blocking finding visible in the final report.
    - `Block` opens one repair round.
    - A missing verdict, failed axis, stale input, contaminated commit, or unconfirmed persistence stops the loop without implementation edits.
 
@@ -31,7 +31,7 @@ The Issue Tracker configuration required by `spec-review` must be present, and e
 
    Repair the implementation against the cited evidence. Do not edit the spec, sibling tickets, their acceptance criteria, or their Review blocks to make the gate pass. When a blocker requires a new product decision, a requirement change, additional authority, or an external-state change, stop and ask for exactly that input.
 
-4. For a behavioral repair at a testable seam, call the Skill tool with "tdd". Run focused checks for every repair, then the repository-required broader validation before committing. Resolve failures introduced by the repair. Report and stop on an unrelated failure that prevents trustworthy validation.
+4. For a behavioral repair at a testable seam, call the Skill tool with "tdd". Run focused checks for every repair before committing. Resolve failures introduced by the repair. Do not run the full test suite during repair rounds.
 
 5. Commit only the in-scope repair changes. Preserve every unrelated index and worktree change, and stop if an overlapping pre-existing change cannot be separated safely. The commit must carry exactly one caller-provided trailer:
 
@@ -45,6 +45,12 @@ The Issue Tracker configuration required by `spec-review` must be present, and e
 
 6. Return to step 1. A repeated blocker triggers diagnosis against its new cited evidence before another edit. Continue while a substantive in-scope repair is available; stop when the next attempt would only repeat the same change or expand the approved requirements.
 
+## Final validation
+
+After a persisted `Pass` or `Pass with follow-up`, run the repository's full test suite against the reviewed `HEAD` immediately before declaring closeout complete. This is the only full-suite gate in this workflow.
+
+If it passes, complete the closeout. If it fails because of an in-scope implementation problem, use the failures as the next repair set, follow the repair and commit rules above, then return to `spec-review` before attempting final validation again. Stop and report an unrelated failure or external limitation that prevents trustworthy final validation. Never report success without a passing full-suite result for the final reviewed implementation.
+
 ## Completion report
 
-On success, report the normalized spec reference, final verdict, number of repair rounds, checks run, and every remaining Non-blocking finding. On an incomplete run, report the current verdict, unresolved Blocking findings or criteria, completed repair rounds, and the precise reason the loop stopped.
+On success, report the normalized spec reference, final verdict, number of repair rounds, focused checks, final full-suite result, and every remaining Non-blocking finding. On an incomplete run, report the current verdict, unresolved Blocking findings or criteria, completed repair rounds, checks run, and the precise reason the loop stopped.

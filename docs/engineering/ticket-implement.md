@@ -26,7 +26,7 @@ The skill commits to the current branch. It does not create a branch or worktree
 
 ## One ticket, one boundary
 
-The current `HEAD` is recorded before a ticket's first implementation, then tests and code are committed before `ticket-review` inspects that committed range. The review writes a separate commit containing only the ticket's checklist and current Review block. The run advances only after that commit contains a persisted `Pass` or `Pass with follow-up` verdict. A blocked review leaves both commits intact, then stops.
+The current `HEAD` is recorded before a ticket's first implementation, then tests and code are committed before `ticket-review` inspects that committed range. The review writes a separate commit containing only the ticket's checklist and current Review block. A persisted `Block` starts a repair loop within the same ticket. Each round uses focused validation; a provisional passing review requires passing targeted tests before its verdict is written. The run advances only after a persisted `Pass` or `Pass with follow-up` verdict.
 
 Every implementation, repair, and ticket Review-result commit carries a repo-relative `Issue-Tracker-Ticket:` trailer and, when the sibling spec exists, an `Issue-Tracker-Spec:` trailer. Review-result commits additionally identify their role with `Issue-Tracker-Review-Result: ticket`. Before review, the skill validates every non-merge commit from the ticket's fixed point through `HEAD`, not only the final message. These references survive normal rebase and let later cumulative review rediscover the current feature boundary from Git history.
 
@@ -46,9 +46,17 @@ Yes. Every reference must resolve unambiguously as a normalized repo-relative pa
 
 **What happens when one ticket blocks?**
 
-The queue stops. Accepted earlier tickets stay committed and reviewed, while the blocked ticket keeps its commit and latest review for repair. Later tickets do not start.
+The current worker repairs Blocking findings and unmet criteria, reruns checks, commits the repairs, and requests another review. It keeps the original fixed point so review includes the initial implementation and every repair. A repeated finding prompts another investigation and repair, not an immediate exit. Requirements stay unchanged, and Non-blocking findings remain follow-up work unless you add them to scope.
 
-On retry, the skill walks the contiguous suffix of commits carrying that ticket's `Issue-Tracker-Ticket:` trailer and reuses the parent of the earliest one as the original fixed point. The repair commit gets the same trailers, so `ticket-review` sees the initial implementation and every repair. A normal rebase changes the derived SHA but preserves the boundary. Interleaved or malformed ticket history stops instead of producing a partial review.
+- A persisted `Pass` or `Pass with follow-up` lets the queue advance. Targeted-test failures are recorded as `Block`, so in-scope failures return to repair and review instead of leaving a premature passing verdict.
+- A blocker needing your decision, changed requirements, extra authority, or an external change pauses the run with a precise reason.
+- Repair and review have no numeric round limit. The worker continues while safe, substantive in-scope repairs remain available.
+- Missing, failed, or unconfirmed review-persistence checks stop the run with files and commits intact. The skill does not automatically commit or replace the Review to bypass that check.
+- Unsafe overlap with unrelated work or a demonstrated inability to attempt a safe substantive repair stops the run after safe in-scope checks are exhausted. Completed commits and reviews stay intact.
+
+Later tickets wait until the current ticket is accepted.
+
+On retry from `Block`, the skill first verifies that the current Review is correctly committed and matches the ticket file. It then walks the contiguous suffix of commits carrying that ticket's `Issue-Tracker-Ticket:` trailer and reuses the parent of the earliest one as the original fixed point. The current Review block supplies the first repair set, so the worker repairs before requesting another review. The repair commit gets the same trailers, so `ticket-review` sees the initial implementation and every repair. A normal rebase changes the derived SHA but preserves the boundary. Interleaved or malformed ticket history stops instead of producing a partial review.
 
 **What happens if I pass an already accepted ticket?**
 
@@ -73,6 +81,7 @@ No. `ticket-implement` can commit directly. A commit helper is compatible when i
 - Only tickets with accepted blockers start.
 - An already accepted ticket is never implemented again.
 - Every completed ticket has a committed `Pass` or `Pass with follow-up` review.
+- A repairable Blocking finding leads to another repair and review round without a manual restart.
 - Every implementation commit contains the verified local ticket and spec trailers that apply to it.
 - The parent receives a compact result before the next fresh worker starts.
 - Neither `spec-review` nor `closeout-spec` starts automatically after the queue.

@@ -21,7 +21,7 @@ Choose the first ready ticket by the queue's tie-breaker. Never run two ticket w
 
 Keep one orchestrator and dispatch every ready ticket to a fresh subagent, one at a time. Give the worker only that ticket and the complete single-ticket workflow. The worker runs `ticket-review` and its reviewer as a nested subagent, then returns only the ticket reference, checks run, review verdict, and whether persistence was confirmed. It does not return commit hashes. Ending that worker provides the context boundary before the next ticket.
 
-After every worker, refetch its ticket and continue only when the persisted verdict is `Pass` or `Pass with follow-up` and its Review-result commit is confirmed; otherwise stop with completed commits and reviews intact. Retain only the worker's compact result, then recompute the frontier from the ticket files before dispatching the next worker.
+Each worker owns the single-ticket Blocking-repair loop and returns only after acceptance or a stop condition in that workflow. After every worker, refetch its ticket and continue only when the persisted verdict is `Pass` or `Pass with follow-up` and its Review-result commit is confirmed; otherwise stop with completed commits and reviews intact. Retain only the worker's compact result, then recompute the frontier from the ticket files before dispatching the next worker.
 
 If nested subagents are unavailable, the orchestrator runs the complete single-ticket workflow directly instead of asking a worker to return commit identities across the context boundary.
 

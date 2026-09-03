@@ -7,7 +7,7 @@ description: "Review one implemented ticket against its acceptance criteria and 
 
 Review one ticket at committed `HEAD` with one reviewer. The reviewer combines repository Standards and ticket Spec coverage at the ticket's own grain, then the owning session writes and commits one current verdict back to the Issue Tracker ticket.
 
-Never edit the implementation or run executable verification. Inspected tests are evidence, not proof that they ran. A ticket is accepted only when its latest review Verdict is `Pass` or `Pass with follow-up` and the configured persisted ticket review check passes; no new global ticket status is introduced.
+Never edit the implementation. The reviewer only inspects code; the owning session runs targeted tests before persisting a passing verdict. Inspected tests are evidence, not proof that they ran. A ticket is accepted only when its latest review Verdict is `Pass` or `Pass with follow-up` and the configured persisted ticket review check passes; no new global ticket status is introduced.
 
 The Issue Tracker configuration and model-invoked `code-review` skill must be available. If `docs/agents/issue-tracker.md` is missing or does not define both `## Review operations` and `## Commit references`, tell the user to rerun `/setup-matt-pocock-skills` to refresh it.
 
@@ -60,11 +60,11 @@ Apply one fixed gate:
 - **Pass with follow-up**: every criterion is Met, there are no Blocking findings, and bounded Non-blocking findings remain.
 - **Block**: any criterion is Partial or Not met, or any Blocking finding exists.
 
-The absence of executable-verification results is not a finding. Record it explicitly in the verification note.
+Treat this verdict as provisional. For `Pass` or `Pass with follow-up`, the owning session must run targeted tests covering the ticket's changed behavior and acceptance criteria against the pinned reviewed commit before writing the verdict. This gate does not require the full test suite. Use a test checkout whose implementation and test inputs match that commit, isolating unrelated worktree changes when necessary. If the targeted tests fail or cannot complete, change the verdict to `Block` and add a Blocking verification finding with the failure or limitation; leave criterion coverage grounded in its evidence. A provisional `Block` does not require an additional test run. Record the commands and outcomes, or why they could not run, in the verification note.
 
 ## 4. Replace the current review
 
-Immediately before writing, refetch the same normalized ticket reference and compare it byte-for-byte with the complete source snapshot. If it changed, the verdict is stale: report the drift and do not write.
+Immediately before writing, confirm `HEAD` still equals the pinned reviewed commit and any passing test result still applies to unchanged implementation and test inputs. Refetch the same normalized ticket reference and compare it byte-for-byte with the complete source snapshot. If either check fails, the verdict is stale: report the drift and do not write.
 
 Replace the latest top-level `## Review` block in place, from that heading to the next top-level `##` heading. When no review exists, insert the new block before `## Comments`, or at the end when no Comments section exists. Preserve every unrelated byte.
 
