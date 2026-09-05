@@ -15,13 +15,13 @@ You invoke this by typing `/ask-matt`; the agent won't reach for it on its own.
 | Two skills that look interchangeable | The line between them, and it is usually one concrete test rather than a matter of taste. [grill-me](https://aihero.dev/skills-grill-me) or [grill-with-docs](https://aihero.dev/skills-grill-with-docs) turns on whether you are in a working directory; [grill-with-docs](https://aihero.dev/skills-grill-with-docs) or [wayfinder](https://aihero.dev/skills-wayfinder) turns on whether the effort fits one session |
 | A long session and a decision about the [context](https://www.aihero.dev/ai-coding-dictionary/context) | The ordered tree over the five options at a phase boundary |
 | An implemented change and uncertainty about review scope | [ticket-review](https://aihero.dev/skills-ticket-review) for one ticket, [code-review](https://aihero.dev/skills-code-review) for a broader branch, [spec-review](https://aihero.dev/skills-spec-review) for one completed-umbrella verdict, or the beta `closeout-spec` for its review and repair loop |
-| An existing local spec and prepared tickets to implement through final validation in one run | The beta `spec-implement`, given an explicit `.scratch/<feature>/spec.md` path or containing feature directory: a sequential queue, persisted ticket acceptance, cumulative repair, and final full-suite validation on the current branch |
+| An existing local spec and prepared tickets to implement through final validation in one run | The beta `spec-implement`, given an explicit `.scratch/<feature>/spec.md` path or containing feature directory: parallel worktree implementation, serialized integration with persisted ticket acceptance, cumulative repair, and final full-suite validation on the current branch |
 | An accepted legacy spec whose criteria lack stable IDs or ticket mappings | The beta `migrate-spec-acceptance` repair step, but only when the spec already has a standalone authoritative acceptance set |
 | A skill you have already picked | Nothing useful. Invoke that skill directly. |
 
 ## Prerequisites
 
-The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable. Most routes use promoted skills; the sequential end-to-end executor, parallel whole-spec executor, final review and repair loop, and legacy acceptance repair route point at in-progress beta skills that must be installed separately.
+The router names skills; it does not install them. Everything it points at has to be installed for the recommendation to be actionable. Most routes use promoted skills; the concurrent local closeout executor, whole-spec PR executor, final review and repair loop, and legacy acceptance repair route point at in-progress beta skills that must be installed separately.
 
 The tracker-dependent routes (triage, `to-spec`, `to-tickets`, `ticket-implement`, `ticket-review`, `spec-review`, `implement-spec`, `spec-implement`, `closeout-spec`) assume [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) has already configured the local markdown Issue Tracker. The router will happily recommend them before that has happened.
 
@@ -34,7 +34,7 @@ The word the skill gives you to think with is **flow**: a path *through* the ski
 - **Standalones**, off every flow, reached for on their own terms: the prototype, the questionnaire, the merge conflict you are already sitting in.
 - **A vocabulary layer underneath**, the two references the other skills pull in when the words rather than the process are the problem.
 
-The beta `spec-implement` requires an explicit spec path or containing feature directory, then carries the prepared sequential queue and closeout in one workflow. It proceeds automatically from ticket acceptance to cumulative review, repair, and final full-suite validation on the current branch and calls the independent review skills directly. The existing `implement-spec` remains the concurrent PR-building route.
+The beta `spec-implement` requires an explicit spec path or containing feature directory, then dispatches ready tickets concurrently in isolated worktrees. Integration and ticket acceptance are serialized on the current branch so each review covers one ticket, and only integrated acceptance unlocks dependants. It proceeds automatically to cumulative review, repair, and final full-suite validation and calls the independent review skills directly. Both beta executors use a concurrent task graph; `spec-implement` completes local acceptance and validation, while `implement-spec` delivers a PR with broad code review.
 
 On the ticket route, `ticket-review` requires passing targeted tests before writing a passing verdict. Its independent reviewer remains read-only; the owning session runs the tests.
 
@@ -88,7 +88,7 @@ Check the changelog for a rename before assuming it is gone. `writing-great-skil
 - The route it gives back names the context boundary and review boundary, not just a list of skill names.
 - Where two skills are close, it says which one and why the other is wrong for you.
 - For a completed umbrella, it distinguishes one cumulative verdict from the beta loop that owns Blocking repairs.
-- For an end-to-end build, it distinguishes sequential `spec-implement` with final validation from concurrent PR-building `implement-spec`.
+- For an end-to-end build, it distinguishes `spec-implement` with integrated ticket acceptance and final validation from `implement-spec` with PR delivery and broad code review; both implement ready tickets concurrently.
 - For a legacy spec, it distinguishes traceability repair from authoring acceptance criteria and refuses to treat User Stories as the latter.
 - Any claim it makes about another skill's behaviour shows up in the trace as it reading that skill's `SKILL.md`.
 - You recognise your own situation in what it hands back, rather than the nearest generic scenario.
