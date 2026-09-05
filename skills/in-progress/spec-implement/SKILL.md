@@ -1,6 +1,7 @@
 ---
 name: spec-implement
-description: "Implement an explicitly referenced local spec end to end: dispatch ready tickets concurrently in isolated worktrees, integrate with persisted ticket acceptance, then repair cumulative review findings and pass final full-suite validation. Use when the user provides the spec file or its containing feature directory and wants implementation through local closeout."
+description: "Implement an explicitly referenced local spec through parallel worktree execution, persisted ticket acceptance, cumulative repair, and final full-suite validation."
+disable-model-invocation: true
 ---
 
 # Spec Implement
