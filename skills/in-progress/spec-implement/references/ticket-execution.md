@@ -2,6 +2,8 @@
 
 The scheduler owns claims and dispatch. Implementers produce ticket-scoped commits in isolated worktrees. The merger is the sole integration writer and owns the ticket's acceptance loop. Only persisted acceptance on the integration branch advances the task graph.
 
+Apply the scheduler-supplied execution preference and scoped user constraints from [execution-preferences.md](execution-preferences.md) when choosing settings or delegating review. Return compact selection records to the scheduler. The sibling `spec-implement.json` is orchestration data, not a requirement snapshot; leave it unchanged and outside all implementation, repair, and Review-result commits.
+
 ## Implementer
 
 A Git worktree may lack local requirement or configuration files. Materialize the supplied spec, sibling tickets, and required repository guidance at their same repo-relative paths when needed, preserving their exact bytes and recording them as source inputs. Keep these inputs out of implementation commits. Use the launch commit's implementation and test inputs; if implementation depends on unrelated uncommitted work, report that dependency instead of importing it silently.
@@ -16,7 +18,7 @@ Take exclusive ownership of the integration worktree until this ticket is accept
 
 Refetch the spec and selected ticket on the integration branch. Require them to match the implementation's source snapshots, recheck blocker acceptance, and verify the worker's launch boundary belongs to the integration history. If the selected ticket is already accepted, return without replaying it. Invalid passing persistence or changed requirements stop integration for reconciliation. Sibling tickets gaining valid acceptance do not by themselves invalidate this ticket's unchanged requirements.
 
-Enumerate the worker commits after its launch boundary. Require a non-empty, merge-free range with exactly one matching ticket trailer and one matching spec trailer on every commit, parsed with `git interpret-trailers --parse`. Require implementation changes, no Review-result markers, and no changes to the spec or sibling ticket files. Reject mixed, missing, duplicated, malformed, or out-of-contract references and uncommitted implementation leftovers.
+Enumerate the worker commits after its launch boundary. Require a non-empty, merge-free range with exactly one matching ticket trailer and one matching spec trailer on every commit, parsed with `git interpret-trailers --parse`. Require implementation changes, no Review-result markers, and no changes to the spec, sibling ticket files, or `spec-implement.json`. Reject mixed, missing, duplicated, malformed, or out-of-contract references and uncommitted implementation leftovers.
 
 Integrate the validated ticket commits as one uninterrupted linear range: fast-forward when the destination is still the launch boundary, otherwise cherry-pick only that range onto the pinned integration `HEAD`. Preserve the trailers and both tickets' intended behavior when resolving conflicts. Keep unrelated commits outside the range, and introduce no merge commit. Stop on an empty implementation diff or conflicts requiring changed requirements or additional authority. Leave incomplete Git operations and their work intact when stopping.
 

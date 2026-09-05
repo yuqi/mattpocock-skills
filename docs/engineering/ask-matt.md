@@ -36,6 +36,14 @@ The word the skill gives you to think with is **flow**: a path *through* the ski
 
 The beta `spec-implement` requires an explicit spec path or containing feature directory, then dispatches ready tickets concurrently in isolated worktrees. Integration and ticket acceptance are serialized on the current branch so each review covers one ticket, and only integrated acceptance unlocks dependants. It proceeds automatically to cumulative review, repair, and final full-suite validation and calls the independent review skills directly. Both beta executors use a concurrent task graph; `spec-implement` completes local acceptance and validation, while `implement-spec` delivers a PR with broad code review.
 
+You can give `spec-implement` an execution preference:
+
+- Quality-first
+- Balanced (default for a new configuration)
+- Speed-first
+
+It saves that preference, explicit constraints, and recent [model](https://www.aihero.dev/ai-coding-dictionary/model) selections in `spec-implement.json` beside the spec so later starts restore your policy. Concrete model and reasoning choices still adapt to each task, its context, and the available runtime. None of the preferences reduces the required review or validation.
+
 On the ticket route, `ticket-review` requires passing targeted tests before writing a passing verdict. Its independent reviewer remains read-only; the owning session runs the tests.
 
 ## The phase boundary
@@ -64,7 +72,7 @@ A known bug, unfixed. Most of the skills the router routes you through set `disa
 
 **It described a skill's behaviour, and the skill doesn't do that.**
 
-Also real, also unfixed. The router answers from its own one-line summary of each skill rather than from the skill. One detailed report tracked three instances in a single session, including a recommendation to skip [to-spec](https://aihero.dev/skills-to-spec) on the strength of the gloss "turn the thread into a spec": `to-spec/SKILL.md` was never opened. In every case it verified only after the user pushed back, and never on its own initiative. Skipping `to-spec` there cost a real seam check, and the tickets that came out undercounted the work. When the router asserts something load-bearing about another skill, ask it to open that `SKILL.md` first. The same applies to questions the map does not cover at all, such as whether to use [plan mode](https://www.aihero.dev/ai-coding-dictionary/agent-mode): that answer is the [model](https://www.aihero.dev/ai-coding-dictionary/model)'s inference, not something written down here.
+Also real, also unfixed. The router answers from its own one-line summary of each skill rather than from the skill. One detailed report tracked three instances in a single session, including a recommendation to skip [to-spec](https://aihero.dev/skills-to-spec) on the strength of the gloss "turn the thread into a spec": `to-spec/SKILL.md` was never opened. In every case it verified only after the user pushed back, and never on its own initiative. Skipping `to-spec` there cost a real seam check, and the tickets that came out undercounted the work. When the router asserts something load-bearing about another skill, ask it to open that `SKILL.md` first. The same applies to questions the map does not cover at all, such as whether to use [plan mode](https://www.aihero.dev/ai-coding-dictionary/agent-mode): that answer is the model's inference, not something written down here.
 
 **Why is it prose instead of a numbered checklist?**
 
